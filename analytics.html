@@ -1,0 +1,2143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SYNAPSE | Analytics Dashboard</title>
+
+  <style>
+    :root {
+      --bg: #080d18;
+      --panel: #111a2b;
+      --panel-light: #1a2942;
+      --primary: #6c8cff;
+      --secondary: #936cff;
+      --text: #f3f6ff;
+      --muted: #9daac2;
+      --border: rgba(255,255,255,.1);
+      --success: #36d399;
+      --danger: #ff6b81;
+      --warning: #f5bb54;
+      --cyan: #48d7e8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      padding-bottom: 40px;
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(
+          circle at top right,
+          #26345d,
+          transparent 38%
+        ),
+        linear-gradient(135deg, #080d18, #0c1425);
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .5;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+
+      padding: 16px 6%;
+
+      background: rgba(8,13,24,.95);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(15px);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      padding: 9px 11px;
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      font-size: 11px;
+    }
+
+    .container {
+      width: min(1150px, 92%);
+      margin: 32px auto;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 45px);
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .danger-button {
+      padding: 12px 15px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .primary-button {
+      color: white;
+      border: 1px solid transparent;
+      background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+      );
+    }
+
+    .secondary-button {
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: var(--panel-light);
+    }
+
+    .danger-button {
+      color: white;
+      border: 1px solid rgba(255,107,129,.3);
+      background: rgba(255,107,129,.12);
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .section-title {
+      margin-bottom: 13px;
+      font-size: 19px;
+    }
+
+    .section-description {
+      margin-top: -5px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .card {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: linear-gradient(
+        145deg,
+        #111a2b,
+        #0c1423
+      );
+      box-shadow: 0 14px 40px rgba(0,0,0,.18);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+    }
+
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        var(--primary),
+        var(--secondary)
+      );
+    }
+
+    .stat-label {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .stat-value {
+      margin-bottom: 8px;
+      font-size: 31px;
+      font-weight: 800;
+    }
+
+    .stat-description {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .success-value {
+      color: var(--success);
+    }
+
+    .warning-value {
+      color: var(--warning);
+    }
+
+    .cyan-value {
+      color: var(--cyan);
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .card-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .card-heading h3 {
+      font-size: 17px;
+    }
+
+    .badge {
+      padding: 5px 9px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--muted);
+      background: rgba(255,255,255,.04);
+      font-size: 10px;
+    }
+
+    .overall-layout {
+      display: grid;
+      grid-template-columns: 155px 1fr;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .accuracy-circle {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: auto;
+    }
+
+    .accuracy-circle svg {
+      width: 150px;
+      height: 150px;
+      transform: rotate(-90deg);
+    }
+
+    .circle-background {
+      fill: none;
+      stroke: #26334b;
+      stroke-width: 10;
+    }
+
+    .circle-progress {
+      fill: none;
+      stroke: var(--primary);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 440;
+      stroke-dashoffset: 440;
+      transition: stroke-dashoffset .7s ease;
+    }
+
+    .circle-label {
+      position: absolute;
+      inset: 0;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .circle-label strong {
+      font-size: 28px;
+    }
+
+    .circle-label span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .metric-row {
+      margin-bottom: 18px;
+    }
+
+    .metric-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .metric-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .metric-top span:last-child {
+      color: var(--muted);
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 9px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #26334b;
+    }
+
+    .bar-fill {
+      width: 0;
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(
+        90deg,
+        var(--primary),
+        var(--secondary)
+      );
+      transition: width .6s ease;
+    }
+
+    .subject-row {
+      margin-bottom: 23px;
+    }
+
+    .subject-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .subject-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .subject-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .subject-percentage {
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .subject-details {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .recommendation {
+      padding: 17px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .recommendation:last-child {
+      margin-bottom: 0;
+    }
+
+    .recommendation h4 {
+      margin-bottom: 7px;
+      font-size: 13px;
+    }
+
+    .recommendation p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .history-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+
+    th,
+    td {
+      padding: 13px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 12px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    td {
+      color: #dfe6f7;
+    }
+
+    .table-score {
+      font-weight: 700;
+    }
+
+    .score-good {
+      color: var(--success);
+    }
+
+    .score-average {
+      color: var(--warning);
+    }
+
+    .score-low {
+      color: var(--danger);
+    }
+
+    .empty-state {
+      padding: 28px 15px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+    }
+
+    .profile-item {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .profile-item span {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .profile-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 13px;
+    }
+
+    .last-updated {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .footer {
+      margin-top: 35px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        padding: 14px 4%;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .nav-link {
+        padding: 8px;
+        font-size: 10px;
+      }
+
+      .container {
+        width: 94%;
+        margin-top: 24px;
+      }
+
+      .card {
+        padding: 17px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+
+      .stat-value {
+        font-size: 25px;
+      }
+
+      .overall-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-actions {
+        width: 100%;
+      }
+
+      .header-actions button {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 370px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+
+    <div class="logo">
+      SYNAP<span>SE</span>
+    </div>
+
+    <div class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="tutor.html">Tutor</a>
+      <a class="nav-link" href="quiz.html">Math Quiz</a>
+      <a class="nav-link" href="science.html">Science</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+    </div>
+
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+
+    <!-- HEADER -->
+    <section class="page-header">
+
+      <div>
+        <div class="eyebrow">SYNAPSE Intelligence</div>
+
+        <h1>Learning Analytics</h1>
+
+        <p class="subtitle">
+          Understand your learning progress, review assessment
+          performance, and discover areas that need more practice.
+          Your data is processed locally in this browser.
+        </p>
+      </div>
+
+      <div class="header-actions">
+
+        <button
+          class="secondary-button"
+          id="refreshButton"
+        >
+          ↻ Refresh
+        </button>
+
+        <button
+          class="primary-button"
+          id="studyButton"
+        >
+          Start Learning
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- MAIN STATISTICS -->
+    <section class="section">
+
+      <div class="stats-grid">
+
+        <div class="card stat-card">
+          <div class="stat-label">Overall Accuracy</div>
+
+          <div
+            class="stat-value"
+            id="overallAccuracy"
+          >
+            0%
+          </div>
+
+          <div class="stat-description">
+            Across recorded assessments
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-label">Total Assessments</div>
+
+          <div
+            class="stat-value cyan-value"
+            id="totalAssessments"
+          >
+            0
+          </div>
+
+          <div class="stat-description">
+            Completed quiz sessions
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-label">Questions Answered</div>
+
+          <div
+            class="stat-value"
+            id="totalQuestions"
+          >
+            0
+          </div>
+
+          <div class="stat-description">
+            Correct and incorrect answers
+          </div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-label">Correct Answers</div>
+
+          <div
+            class="stat-value success-value"
+            id="totalCorrect"
+          >
+            0
+          </div>
+
+          <div class="stat-description">
+            Questions answered correctly
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- OVERALL PERFORMANCE -->
+    <section class="section">
+
+      <div class="two-column">
+
+        <div class="card">
+
+          <div class="card-heading">
+            <h3>Overall Performance</h3>
+
+            <span class="badge">
+              All Subjects
+            </span>
+          </div>
+
+          <div class="overall-layout">
+
+            <div class="accuracy-circle">
+
+              <svg viewBox="0 0 160 160">
+
+                <circle
+                  class="circle-background"
+                  cx="80"
+                  cy="80"
+                  r="70"
+                ></circle>
+
+                <circle
+                  class="circle-progress"
+                  id="circleProgress"
+                  cx="80"
+                  cy="80"
+                  r="70"
+                ></circle>
+
+              </svg>
+
+              <div class="circle-label">
+
+                <strong id="circlePercentage">
+                  0%
+                </strong>
+
+                <span>Accuracy</span>
+
+              </div>
+
+            </div>
+
+            <div>
+
+              <div class="metric-row">
+
+                <div class="metric-top">
+                  <span>Correct</span>
+                  <span id="correctMetric">0</span>
+                </div>
+
+                <div class="bar-track">
+                  <div
+                    class="bar-fill"
+                    id="correctBar"
+                  ></div>
+                </div>
+
+              </div>
+
+              <div class="metric-row">
+
+                <div class="metric-top">
+                  <span>Incorrect</span>
+                  <span id="incorrectMetric">0</span>
+                </div>
+
+                <div class="bar-track">
+                  <div
+                    class="bar-fill"
+                    id="incorrectBar"
+                  ></div>
+                </div>
+
+              </div>
+
+              <div class="metric-row">
+
+                <div class="metric-top">
+                  <span>Unanswered</span>
+                  <span id="unansweredMetric">0</span>
+                </div>
+
+                <div class="bar-track">
+                  <div
+                    class="bar-fill"
+                    id="unansweredBar"
+                  ></div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ADAPTIVE DATA -->
+        <div class="card">
+
+          <div class="card-heading">
+            <h3>Adaptive Learning</h3>
+
+            <span class="badge">
+              Learning Engine
+            </span>
+          </div>
+
+          <div class="metric-row">
+
+            <div class="metric-top">
+              <span>Total Tracked Answers</span>
+              <span id="adaptiveTotal">0</span>
+            </div>
+
+            <div class="bar-track">
+              <div
+                class="bar-fill"
+                id="adaptiveTotalBar"
+              ></div>
+            </div>
+
+          </div>
+
+          <div class="metric-row">
+
+            <div class="metric-top">
+              <span>Correct Answers</span>
+              <span id="adaptiveCorrect">0</span>
+            </div>
+
+            <div class="bar-track">
+              <div
+                class="bar-fill"
+                id="adaptiveCorrectBar"
+              ></div>
+            </div>
+
+          </div>
+
+          <div class="metric-row">
+
+            <div class="metric-top">
+              <span>Incorrect Answers</span>
+              <span id="adaptiveIncorrect">0</span>
+            </div>
+
+            <div class="bar-track">
+              <div
+                class="bar-fill"
+                id="adaptiveIncorrectBar"
+              ></div>
+            </div>
+
+          </div>
+
+          <div class="metric-row">
+
+            <div class="metric-top">
+              <span>Hints Used</span>
+              <span id="adaptiveHints">0</span>
+            </div>
+
+            <div class="bar-track">
+              <div
+                class="bar-fill"
+                id="adaptiveHintsBar"
+              ></div>
+            </div>
+
+          </div>
+
+          <p
+            class="section-description"
+            id="adaptiveSummary"
+            style="margin:20px 0 0;"
+          >
+            No adaptive learning data recorded yet.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SUBJECT PERFORMANCE -->
+    <section class="section">
+
+      <div class="card">
+
+        <div class="card-heading">
+          <h3>Subject Performance</h3>
+
+          <span class="badge">
+            Mathematics + Science
+          </span>
+        </div>
+
+        <p class="section-description">
+          Performance is calculated from recorded quiz history.
+          Subjects without completed assessments show no score.
+        </p>
+
+        <div id="subjectPerformance">
+          <div class="empty-state">
+            No subject performance data available yet.
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- RECOMMENDATIONS -->
+    <section class="section">
+
+      <div class="two-column">
+
+        <div class="card">
+
+          <div class="card-heading">
+            <h3>Learning Insights</h3>
+
+            <span class="badge">
+              Automatic
+            </span>
+          </div>
+
+          <div id="insightsContainer">
+
+            <div class="empty-state">
+              Complete an assessment to receive learning insights.
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-heading">
+            <h3>Latest Assessment</h3>
+
+            <span class="badge">
+              Recent
+            </span>
+          </div>
+
+          <div id="latestAssessment">
+
+            <div class="empty-state">
+              No assessment has been completed yet.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ASSESSMENT HISTORY -->
+    <section class="section">
+
+      <div class="card">
+
+        <div class="card-heading">
+
+          <h3>Assessment History</h3>
+
+          <span
+            class="badge"
+            id="historyCount"
+          >
+            0 records
+          </span>
+
+        </div>
+
+        <p class="section-description">
+          Your most recent recorded Mathematics and Science assessments.
+        </p>
+
+        <div class="history-wrapper">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Topic</th>
+                <th>Mode</th>
+                <th>Score</th>
+                <th>Questions</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            <tbody id="historyBody">
+
+              <tr>
+                <td colspan="6">
+                  <div class="empty-state">
+                    No assessment history available.
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- STUDENT PROFILE -->
+    <section class="section">
+
+      <div class="card">
+
+        <div class="card-heading">
+
+          <h3>Student Profile</h3>
+
+          <span class="badge">
+            Local Profile
+          </span>
+
+        </div>
+
+        <div
+          class="profile-grid"
+          id="profileContainer"
+        >
+
+          <div class="profile-item">
+            <span>Name</span>
+            <strong id="profileName">Not set</strong>
+          </div>
+
+          <div class="profile-item">
+            <span>Education Level</span>
+            <strong id="profileEducation">Not set</strong>
+          </div>
+
+          <div class="profile-item">
+            <span>Main Subject</span>
+            <strong id="profileSubject">Not set</strong>
+          </div>
+
+          <div class="profile-item">
+            <span>Learning Style</span>
+            <strong id="profileStyle">Not set</strong>
+          </div>
+
+          <div class="profile-item">
+            <span>Weekly Study Target</span>
+            <strong id="profileTarget">Not set</strong>
+          </div>
+
+          <div class="profile-item">
+            <span>Daily Study Time</span>
+            <strong id="profileMinutes">Not set</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <div class="last-updated">
+      Last updated:
+      <span id="lastUpdated">Not yet updated</span>
+    </div>
+
+    <div class="footer">
+      SYNAPSE — Adaptive Learning Infrastructure
+    </div>
+
+  </main>
+
+  <script>
+    /*
+      SYNAPSE ADVANCED ANALYTICS
+
+      Supported localStorage keys:
+
+      1. synapse_quiz_history
+      2. synapse_science_quiz_history
+      3. synapse_adaptive_learning
+      4. synapse_student_profile
+      5. synapse_learning_progress
+
+      This dashboard reads local browser data only.
+    */
+
+    const MATH_HISTORY_KEY =
+      "synapse_quiz_history";
+
+    const SCIENCE_HISTORY_KEY =
+      "synapse_science_quiz_history";
+
+    const ADAPTIVE_KEY =
+      "synapse_adaptive_learning";
+
+    const PROFILE_KEY =
+      "synapse_student_profile";
+
+    const LEARNING_PROGRESS_KEY =
+      "synapse_learning_progress";
+
+    const SUBJECTS = [
+      "Mathematics",
+      "Physics",
+      "Chemistry",
+      "Biology"
+    ];
+
+    let allHistory = [];
+
+    function getStorage(key, fallback) {
+      try {
+        const value = localStorage.getItem(key);
+
+        if (!value) {
+          return fallback;
+        }
+
+        return JSON.parse(value);
+
+      } catch (error) {
+        console.warn(
+          "Could not read storage:",
+          key,
+          error
+        );
+
+        return fallback;
+      }
+    }
+
+    function getArrayStorage(key) {
+      const data = getStorage(key, []);
+
+      return Array.isArray(data) ? data : [];
+    }
+
+    function getObjectStorage(key) {
+      const data = getStorage(key, {});
+
+      return data &&
+        typeof data === "object" &&
+        !Array.isArray(data)
+        ? data
+        : {};
+    }
+
+    function toNumber(value) {
+      const number = Number(value);
+
+      return Number.isFinite(number)
+        ? number
+        : 0;
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(dateValue) {
+      if (!dateValue) {
+        return "Unknown";
+      }
+
+      const date = new Date(dateValue);
+
+      if (Number.isNaN(date.getTime())) {
+        return "Unknown";
+      }
+
+      return date.toLocaleDateString(
+        undefined,
+        {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        }
+      );
+    }
+
+    function formatDateTime(dateValue) {
+      if (!dateValue) {
+        return "Unknown";
+      }
+
+      const date = new Date(dateValue);
+
+      if (Number.isNaN(date.getTime())) {
+        return "Unknown";
+      }
+
+      return date.toLocaleString();
+    }
+
+    function normalizeHistory(entry, source) {
+      if (!entry || typeof entry !== "object") {
+        return null;
+      }
+
+      const subject = entry.subject ||
+        (source === "math"
+          ? "Mathematics"
+          : "Science");
+
+      let percentage = toNumber(
+        entry.percentage
+      );
+
+      const total = toNumber(
+        entry.total
+      );
+
+      const correct = toNumber(
+        entry.correct
+      );
+
+      if (
+        percentage === 0 &&
+        total > 0 &&
+        correct > 0
+      ) {
+        percentage = Math.round(
+          (correct / total) * 100
+        );
+      }
+
+      return {
+        subject,
+        topic: entry.topic ||
+          entry.concept ||
+          "General",
+        mode: entry.mode || "Practice",
+        total,
+        correct,
+        incorrect: toNumber(entry.incorrect),
+        unanswered: toNumber(entry.unanswered),
+        percentage: Math.max(
+          0,
+          Math.min(100, percentage)
+        ),
+        completedAt: entry.completedAt ||
+          entry.date ||
+          null
+      };
+    }
+
+    function loadAllHistory() {
+      const mathHistory =
+        getArrayStorage(MATH_HISTORY_KEY);
+
+      const scienceHistory =
+        getArrayStorage(SCIENCE_HISTORY_KEY);
+
+      const normalizedMath = mathHistory
+        .map((entry) =>
+          normalizeHistory(entry, "math")
+        )
+        .filter(Boolean);
+
+      const normalizedScience = scienceHistory
+        .map((entry) =>
+          normalizeHistory(entry, "science")
+        )
+        .filter(Boolean);
+
+      allHistory = [
+        ...normalizedMath,
+        ...normalizedScience
+      ];
+
+      allHistory.sort((a, b) => {
+        const first = new Date(
+          a.completedAt || 0
+        ).getTime();
+
+        const second = new Date(
+          b.completedAt || 0
+        ).getTime();
+
+        return second - first;
+      });
+
+      return allHistory;
+    }
+
+    function calculateSummary(history) {
+      let totalQuestions = 0;
+      let totalCorrect = 0;
+      let totalIncorrect = 0;
+      let totalUnanswered = 0;
+
+      history.forEach((entry) => {
+        totalQuestions += entry.total;
+        totalCorrect += entry.correct;
+        totalIncorrect += entry.incorrect;
+        totalUnanswered += entry.unanswered;
+      });
+
+      const answered =
+        totalCorrect + totalIncorrect;
+
+      const accuracy = answered > 0
+        ? Math.round(
+            (totalCorrect / answered) * 100
+          )
+        : 0;
+
+      return {
+        assessments: history.length,
+        totalQuestions,
+        totalCorrect,
+        totalIncorrect,
+        totalUnanswered,
+        answered,
+        accuracy
+      };
+    }
+
+    function setText(id, value) {
+      const element = document.getElementById(id);
+
+      if (element) {
+        element.textContent = value;
+      }
+    }
+
+    function setBar(id, percentage) {
+      const element = document.getElementById(id);
+
+      if (!element) {
+        return;
+      }
+
+      const safePercentage = Math.max(
+        0,
+        Math.min(100, toNumber(percentage))
+      );
+
+      element.style.width =
+        safePercentage + "%";
+    }
+
+    function updateMainStats(summary) {
+      setText(
+        "overallAccuracy",
+        summary.accuracy + "%"
+      );
+
+      setText(
+        "totalAssessments",
+        summary.assessments
+      );
+
+      setText(
+        "totalQuestions",
+        summary.answered
+      );
+
+      setText(
+        "totalCorrect",
+        summary.totalCorrect
+      );
+    }
+
+    function updateCircle(accuracy) {
+      const circle =
+        document.getElementById("circleProgress");
+
+      const radius = 70;
+      const circumference =
+        2 * Math.PI * radius;
+
+      const offset =
+        circumference -
+        (accuracy / 100) * circumference;
+
+      circle.style.strokeDasharray =
+        circumference;
+
+      circle.style.strokeDashoffset =
+        offset;
+
+      setText(
+        "circlePercentage",
+        accuracy + "%"
+      );
+    }
+
+    function updateOverallMetrics(summary) {
+      setText(
+        "correctMetric",
+        summary.totalCorrect
+      );
+
+      setText(
+        "incorrectMetric",
+        summary.totalIncorrect
+      );
+
+      setText(
+        "unansweredMetric",
+        summary.totalUnanswered
+      );
+
+      const total =
+        summary.totalCorrect +
+        summary.totalIncorrect +
+        summary.totalUnanswered;
+
+      if (total === 0) {
+        setBar("correctBar", 0);
+        setBar("incorrectBar", 0);
+        setBar("unansweredBar", 0);
+        return;
+      }
+
+      setBar(
+        "correctBar",
+        summary.totalCorrect / total * 100
+      );
+
+      setBar(
+        "incorrectBar",
+        summary.totalIncorrect / total * 100
+      );
+
+      setBar(
+        "unansweredBar",
+        summary.totalUnanswered / total * 100
+      );
+    }
+
+    function updateAdaptiveMetrics() {
+      const adaptive =
+        getObjectStorage(ADAPTIVE_KEY);
+
+      const total = toNumber(
+        adaptive.totalAnswers
+      );
+
+      const correct = toNumber(
+        adaptive.correctAnswers
+      );
+
+      const incorrect = toNumber(
+        adaptive.incorrectAnswers
+      );
+
+      const hints = toNumber(
+        adaptive.hintsUsed
+      );
+
+      setText("adaptiveTotal", total);
+      setText("adaptiveCorrect", correct);
+      setText("adaptiveIncorrect", incorrect);
+      setText("adaptiveHints", hints);
+
+      const maximum =
+        Math.max(
+          total,
+          correct,
+          incorrect,
+          hints,
+          1
+        );
+
+      setBar(
+        "adaptiveTotalBar",
+        total / maximum * 100
+      );
+
+      setBar(
+        "adaptiveCorrectBar",
+        correct / maximum * 100
+      );
+
+      setBar(
+        "adaptiveIncorrectBar",
+        incorrect / maximum * 100
+      );
+
+      setBar(
+        "adaptiveHintsBar",
+        hints / maximum * 100
+      );
+
+      let summary = "";
+
+      if (total > 0) {
+        const accuracy = Math.round(
+          (correct / total) * 100
+        );
+
+        summary =
+          "The adaptive engine has tracked " +
+          total +
+          " answers with an accuracy of " +
+          accuracy +
+          "%.";
+      } else {
+        summary =
+          "No adaptive learning data recorded yet.";
+      }
+
+      setText(
+        "adaptiveSummary",
+        summary
+      );
+    }
+
+    function calculateSubjectStats(history) {
+      const stats = {};
+
+      SUBJECTS.forEach((subject) => {
+        stats[subject] = {
+          assessments: 0,
+          total: 0,
+          correct: 0,
+          incorrect: 0,
+          unanswered: 0
+        };
+      });
+
+      history.forEach((entry) => {
+        let subject = entry.subject;
+
+        if (
+          !Object.prototype.hasOwnProperty.call(
+            stats,
+            subject
+          )
+        ) {
+          stats[subject] = {
+            assessments: 0,
+            total: 0,
+            correct: 0,
+            incorrect: 0,
+            unanswered: 0
+          };
+        }
+
+        stats[subject].assessments++;
+        stats[subject].total += entry.total;
+        stats[subject].correct += entry.correct;
+        stats[subject].incorrect += entry.incorrect;
+        stats[subject].unanswered += entry.unanswered;
+      });
+
+      Object.keys(stats).forEach((subject) => {
+        const item = stats[subject];
+
+        const answered =
+          item.correct + item.incorrect;
+
+        item.answered = answered;
+
+        item.accuracy = answered > 0
+          ? Math.round(
+              item.correct / answered * 100
+            )
+          : 0;
+      });
+
+      return stats;
+    }
+
+    function getSubjectIcon(subject) {
+      const icons = {
+        "Mathematics": "📐",
+        "Physics": "⚡",
+        "Chemistry": "🧪",
+        "Biology": "🧬"
+      };
+
+      return icons[subject] || "📚";
+    }
+
+    function renderSubjectPerformance(history) {
+      const container =
+        document.getElementById(
+          "subjectPerformance"
+        );
+
+      const stats =
+        calculateSubjectStats(history);
+
+      const subjects = Object.keys(stats);
+
+      const hasData = subjects.some(
+        (subject) =>
+          stats[subject].assessments > 0
+      );
+
+      if (!hasData) {
+        container.innerHTML = `
+          <div class="empty-state">
+            Complete a Mathematics or Science
+            assessment to see subject performance.
+          </div>
+        `;
+
+        return;
+      }
+
+      container.innerHTML = subjects
+        .map((subject) => {
+          const item = stats[subject];
+
+          if (item.assessments === 0) {
+            return `
+              <div class="subject-row">
+
+                <div class="subject-heading">
+                  <span class="subject-name">
+                    ${getSubjectIcon(subject)}
+                    ${escapeHTML(subject)}
+                  </span>
+
+                  <span
+                    class="subject-percentage"
+                    style="color:var(--muted);"
+                  >
+                    No data
+                  </span>
+                </div>
+
+                <div class="bar-track">
+                  <div
+                    class="bar-fill"
+                    style="width:0%;"
+                  ></div>
+                </div>
+
+                <div class="subject-details">
+                  <span>No completed assessments</span>
+                  <span>0 questions</span>
+                </div>
+
+              </div>
+            `;
+          }
+
+          return `
+            <div class="subject-row">
+
+              <div class="subject-heading">
+                <span class="subject-name">
+                  ${getSubjectIcon(subject)}
+                  ${escapeHTML(subject)}
+                </span>
+
+                <span class="subject-percentage">
+                  ${item.accuracy}%
+                </span>
+              </div>
+
+              <div class="bar-track">
+                <div
+                  class="bar-fill"
+                  style="width:${item.accuracy}%;"
+                ></div>
+              </div>
+
+              <div class="subject-details">
+                <span>
+                  ${item.assessments} assessment(s)
+                </span>
+
+                <span>
+                  ${item.correct}/${item.answered}
+                  correct
+                </span>
+              </div>
+
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function createInsight(
+      title,
+      message,
+      type
+    ) {
+      return `
+        <div
+          class="recommendation"
+          style="border-left-color:${type};"
+        >
+          <h4>${escapeHTML(title)}</h4>
+
+          <p>${escapeHTML(message)}</p>
+        </div>
+      `;
+    }
+
+    function renderInsights(history, summary) {
+      const container =
+        document.getElementById(
+          "insightsContainer"
+        );
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            Complete your first assessment to
+            receive learning insights.
+          </div>
+        `;
+
+        return;
+      }
+
+      const stats =
+        calculateSubjectStats(history);
+
+      const insights = [];
+
+      if (summary.accuracy >= 80) {
+        insights.push(
+          createInsight(
+            "Strong performance",
+            "Your recorded accuracy is at least 80%. Continue practicing to maintain your understanding.",
+            "var(--success)"
+          )
+        );
+      } else if (summary.accuracy >= 50) {
+        insights.push(
+          createInsight(
+            "Developing understanding",
+            "Your results show progress. Review incorrect answers and practice the concepts you find difficult.",
+            "var(--warning)"
+          )
+        );
+      } else {
+        insights.push(
+          createInsight(
+            "Build your foundation",
+            "Review the explanations from completed assessments and practice one topic at a time.",
+            "var(--danger)"
+          )
+        );
+      }
+
+      let weakestSubject = null;
+      let weakestAccuracy = 101;
+
+      Object.keys(stats).forEach((subject) => {
+        const item = stats[subject];
+
+        if (
+          item.assessments > 0 &&
+          item.accuracy < weakestAccuracy
+        ) {
+          weakestAccuracy = item.accuracy;
+          weakestSubject = subject;
+        }
+      });
+
+      if (weakestSubject) {
+        insights.push(
+          createInsight(
+            "Review " + weakestSubject,
+            "Your recorded accuracy for this subject is " +
+            weakestAccuracy +
+            "%. Review its topics before moving to more difficult questions.",
+            "var(--primary)"
+          )
+        );
+      }
+
+      if (summary.totalIncorrect > 0) {
+        insights.push(
+          createInsight(
+            "Study incorrect answers",
+            "You have " +
+            summary.totalIncorrect +
+            " incorrect recorded answers. Use the answer explanations to identify knowledge gaps.",
+            "var(--cyan)"
+          )
+        );
+      }
+
+      container.innerHTML = insights.join("");
+    }
+
+    function renderLatestAssessment(history) {
+      const container =
+        document.getElementById(
+          "latestAssessment"
+        );
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            No assessment has been completed yet.
+          </div>
+        `;
+
+        return;
+      }
+
+      const latest = history[0];
+
+      const scoreClass =
+        latest.percentage >= 80
+          ? "score-good"
+          : latest.percentage >= 50
+            ? "score-average"
+            : "score-low";
+
+      container.innerHTML = `
+        <div class="recommendation">
+
+          <h4>
+            ${escapeHTML(latest.subject)}
+          </h4>
+
+          <p>
+            Topic:
+            ${escapeHTML(latest.topic)}
+          </p>
+
+          <p>
+            Mode:
+            ${escapeHTML(latest.mode)}
+          </p>
+
+          <p>
+            Score:
+            <strong class="${scoreClass}">
+              ${latest.percentage}%
+            </strong>
+          </p>
+
+          <p>
+            Correct:
+            ${latest.correct}/${latest.total}
+          </p>
+
+          <p>
+            Date:
+            ${escapeHTML(
+              formatDateTime(latest.completedAt)
+            )}
+          </p>
+
+        </div>
+      `;
+    }
+
+    function getScoreClass(score) {
+      if (score >= 80) {
+        return "score-good";
+      }
+
+      if (score >= 50) {
+        return "score-average";
+      }
+
+      return "score-low";
+    }
+
+    function renderHistory(history) {
+      const body =
+        document.getElementById(
+          "historyBody"
+        );
+
+      setText(
+        "historyCount",
+        history.length + " records"
+      );
+
+      if (history.length === 0) {
+        body.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="empty-state">
+                No assessment history available.
+              </div>
+            </td>
+          </tr>
+        `;
+
+        return;
+      }
+
+      const recentHistory =
+        history.slice(0, 30);
+
+      body.innerHTML = recentHistory
+        .map((entry) => {
+          const scoreClass =
+            getScoreClass(entry.percentage);
+
+          return `
+            <tr>
+
+              <td>
+                ${escapeHTML(entry.subject)}
+              </td>
+
+              <td>
+                ${escapeHTML(entry.topic)}
+              </td>
+
+              <td>
+                ${escapeHTML(entry.mode)}
+              </td>
+
+              <td>
+                <span class="table-score ${scoreClass}">
+                  ${entry.percentage}%
+                </span>
+              </td>
+
+              <td>
+                ${entry.correct}/${entry.total}
+              </td>
+
+              <td>
+                ${escapeHTML(
+                  formatDate(entry.completedAt)
+                )}
+              </td>
+
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    function renderProfile() {
+      const profile =
+        getObjectStorage(PROFILE_KEY);
+
+      setText(
+        "profileName",
+        profile.name ||
+        profile.studentName ||
+        "Not set"
+      );
+
+      setText(
+        "profileEducation",
+        profile.educationLevel ||
+        profile.education ||
+        "Not set"
+      );
+
+      setText(
+        "profileSubject",
+        profile.mainSubject ||
+        profile.subject ||
+        "Not set"
+      );
+
+      setText(
+        "profileStyle",
+        profile.learningStyle ||
+        "Not set"
+      );
+
+      setText(
+        "profileTarget",
+        profile.weeklyStudyTarget ||
+        profile.weeklyTarget ||
+        "Not set"
+      );
+
+      let dailyMinutes =
+        profile.dailyStudyMinutes ||
+        profile.studyMinutes ||
+        "";
+
+      if (dailyMinutes) {
+        dailyMinutes += " minutes";
+      } else {
+        dailyMinutes = "Not set";
+      }
+
+      setText(
+        "profileMinutes",
+        dailyMinutes
+      );
+    }
+
+    function updateDashboard() {
+      loadAllHistory();
+
+      const summary =
+        calculateSummary(allHistory);
+
+      updateMainStats(summary);
+      updateCircle(summary.accuracy);
+      updateOverallMetrics(summary);
+      updateAdaptiveMetrics();
+
+      renderSubjectPerformance(allHistory);
+      renderInsights(allHistory, summary);
+      renderLatestAssessment(allHistory);
+      renderHistory(allHistory);
+      renderProfile();
+
+      setText(
+        "lastUpdated",
+        new Date().toLocaleString()
+      );
+    }
+
+    function clearAnalyticsHistory() {
+      const confirmed = confirm(
+        "This will delete Mathematics and Science quiz history from this browser. Continue?"
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      localStorage.removeItem(
+        MATH_HISTORY_KEY
+      );
+
+      localStorage.removeItem(
+        SCIENCE_HISTORY_KEY
+      );
+
+      updateDashboard();
+
+      alert(
+        "Quiz history was cleared from this browser."
+      );
+    }
+
+    document
+      .getElementById("refreshButton")
+      .addEventListener(
+        "click",
+        updateDashboard
+      );
+
+    document
+      .getElementById("studyButton")
+      .addEventListener(
+        "click",
+        () => {
+          window.location.href =
+            "tutor.html";
+        }
+      );
+
+    /*
+      Optional browser console command:
+
+      clearAnalyticsHistory()
+
+      The function is intentionally not
+      connected to the interface to reduce
+      accidental deletion.
+    */
+
+    window.clearAnalyticsHistory =
+      clearAnalyticsHistory;
+
+    window.addEventListener(
+      "storage",
+      updateDashboard
+    );
+
+    updateDashboard();
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,946 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SYNAPSE | Diagnostic Assessment</title>
+
+    <style>
+
+        :root {
+            --background: #070b14;
+            --surface: #0d1524;
+            --surface-light: #142239;
+            --border: rgba(148, 163, 184, 0.18);
+
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+
+            --gold: #eabf68;
+            --blue: #5ca9ff;
+            --green: #54d6a0;
+            --red: #ff7c89;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(92, 169, 255, 0.09),
+                    transparent 35%
+                ),
+                var(--background);
+
+            color: var(--text);
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(850px, 92%);
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            border-bottom: 1px solid var(--border);
+            background: rgba(7, 11, 20, 0.94);
+        }
+
+        .header-content {
+            min-height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo-symbol {
+            width: 36px;
+            height: 36px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+
+            color: var(--gold);
+        }
+
+        .back-link {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .back-link:hover {
+            color: var(--gold);
+        }
+
+        /* MAIN */
+
+        main {
+            padding: 50px 0 80px;
+        }
+
+        .page-label {
+            color: var(--blue);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            margin-top: 12px;
+
+            font-size: clamp(30px, 6vw, 48px);
+            line-height: 1.15;
+        }
+
+        .intro {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* PROGRESS */
+
+        .progress-section {
+            margin-top: 35px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .progress-track {
+            height: 7px;
+
+            margin-top: 12px;
+
+            overflow: hidden;
+
+            border-radius: 999px;
+            background: var(--surface-light);
+        }
+
+        .progress-bar {
+            width: 20%;
+            height: 100%;
+
+            border-radius: 999px;
+            background: var(--gold);
+
+            transition: width 0.3s ease;
+        }
+
+        /* QUESTION CARD */
+
+        .question-card {
+            margin-top: 25px;
+            padding: 28px;
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20, 34, 57, 0.88),
+                    rgba(13, 21, 36, 0.9)
+                );
+
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.2);
+        }
+
+        .category {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border: 1px solid rgba(92, 169, 255, 0.3);
+            border-radius: 999px;
+
+            color: var(--blue);
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .question-title {
+            margin-top: 25px;
+            font-size: 23px;
+        }
+
+        .question-text {
+            margin-top: 10px;
+
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+
+            margin-top: 28px;
+        }
+
+        .option {
+            width: 100%;
+
+            padding: 15px;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            border: 1px solid var(--border);
+            border-radius: 11px;
+
+            background: rgba(255, 255, 255, 0.025);
+            color: var(--text);
+
+            text-align: left;
+            font-size: 14px;
+
+            cursor: pointer;
+
+            transition:
+                border-color 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .option:hover {
+            border-color: var(--gold);
+            background: rgba(234, 191, 104, 0.06);
+        }
+
+        .option-letter {
+            width: 28px;
+            height: 28px;
+
+            display: grid;
+            place-items: center;
+
+            flex-shrink: 0;
+
+            border: 1px solid var(--border);
+            border-radius: 8px;
+
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .option.selected {
+            border-color: var(--gold);
+            background: rgba(234, 191, 104, 0.12);
+        }
+
+        .option.correct {
+            border-color: var(--green);
+            background: rgba(84, 214, 160, 0.1);
+        }
+
+        .option.incorrect {
+            border-color: var(--red);
+            background: rgba(255, 124, 137, 0.1);
+        }
+
+        .feedback {
+            display: none;
+
+            margin-top: 20px;
+            padding: 14px;
+
+            border-radius: 10px;
+
+            background: rgba(92, 169, 255, 0.08);
+            border: 1px solid rgba(92, 169, 255, 0.2);
+
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .feedback.visible {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+
+            margin-top: 25px;
+        }
+
+        .next-button,
+        .restart-button {
+            padding: 13px 22px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: var(--gold);
+            color: #171108;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+        .next-button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* RESULT */
+
+        .result-card {
+            display: none;
+
+            margin-top: 25px;
+            padding: 32px;
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
+
+            background: var(--surface);
+            text-align: center;
+        }
+
+        .result-card.visible {
+            display: block;
+        }
+
+        .result-score {
+            margin-top: 20px;
+
+            color: var(--gold);
+            font-size: 58px;
+            font-weight: 800;
+        }
+
+        .result-message {
+            margin-top: 15px;
+
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+
+            margin-top: 28px;
+        }
+
+        .dashboard-button {
+            padding: 13px 20px;
+
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 600px) {
+
+            main {
+                padding-top: 35px;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .question-title {
+                font-size: 20px;
+            }
+
+            .option {
+                padding: 13px;
+                font-size: 13px;
+            }
+
+            .header-content {
+                min-height: 65px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="container header-content">
+
+            <a href="index.html" class="logo">
+                <span class="logo-symbol">S</span>
+                <span>SYNAPSE</span>
+            </a>
+
+            <a href="index.html" class="back-link">
+                ← Exit
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+        <div class="container">
+
+            <span class="page-label">
+                INITIAL KNOWLEDGE DIAGNOSTIC
+            </span>
+
+            <h1>
+                Discover your
+                learning foundation.
+            </h1>
+
+            <p class="intro">
+                Answer the questions honestly. This assessment
+                will help identify your current mathematics
+                knowledge and prepare your learning path.
+            </p>
+
+
+            <!-- PROGRESS -->
+
+            <section class="progress-section">
+
+                <div class="progress-top">
+
+                    <span id="questionCounter">
+                        Question 1 of 5
+                    </span>
+
+                    <span id="progressPercent">
+                        20%
+                    </span>
+
+                </div>
+
+                <div class="progress-track">
+
+                    <div
+                        id="progressBar"
+                        class="progress-bar"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- QUESTION -->
+
+            <section
+                id="questionCard"
+                class="question-card"
+            >
+
+                <span
+                    id="questionCategory"
+                    class="category"
+                >
+                    Arithmetic
+                </span>
+
+                <h2
+                    id="questionTitle"
+                    class="question-title"
+                >
+                    Question
+                </h2>
+
+                <p
+                    id="questionText"
+                    class="question-text"
+                >
+                    Loading question...
+                </p>
+
+                <div
+                    id="answerOptions"
+                    class="options"
+                ></div>
+
+                <div
+                    id="questionFeedback"
+                    class="feedback"
+                ></div>
+
+                <div class="controls">
+
+                    <button
+                        id="nextButton"
+                        class="next-button"
+                        disabled
+                    >
+                        Check Answer
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- RESULT -->
+
+            <section
+                id="resultCard"
+                class="result-card"
+            >
+
+                <span class="page-label">
+                    DIAGNOSTIC COMPLETE
+                </span>
+
+                <h2>
+                    Your assessment result
+                </h2>
+
+                <div
+                    id="resultScore"
+                    class="result-score"
+                >
+                    0/5
+                </div>
+
+                <p
+                    id="resultMessage"
+                    class="result-message"
+                ></p>
+
+                <div class="result-actions">
+
+                    <button
+                        id="restartButton"
+                        class="restart-button"
+                    >
+                        Try Again
+                    </button>
+
+                    <a
+    href="dashboard.html"
+    class="dashboard-button"
+>
+    View Dashboard
+</a>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        const questions = [
+
+            {
+                category: "Arithmetic",
+                title: "Basic Addition",
+                text: "What is 8 + 7?",
+                options: ["13", "14", "15", "16"],
+                correct: 2,
+                explanation: "8 + 7 equals 15."
+            },
+
+            {
+                category: "Fractions",
+                title: "Adding Fractions",
+                text: "What is 1/2 + 1/4?",
+                options: ["2/6", "3/4", "1/6", "1/8"],
+                correct: 1,
+                explanation:
+                    "1/2 equals 2/4. Therefore, 2/4 + 1/4 = 3/4."
+            },
+
+            {
+                category: "Negative Numbers",
+                title: "Integer Addition",
+                text: "What is -3 + 8?",
+                options: ["-11", "-5", "5", "11"],
+                correct: 2,
+                explanation:
+                    "Starting at -3 and moving 8 steps upward gives 5."
+            },
+
+            {
+                category: "Algebraic Expressions",
+                title: "Substitution",
+                text: "If x = 3, what is 2x + 4?",
+                options: ["7", "10", "12", "14"],
+                correct: 1,
+                explanation:
+                    "Replace x with 3: 2(3) + 4 = 6 + 4 = 10."
+            },
+
+            {
+                category: "Linear Equations",
+                title: "Solving an Equation",
+                text: "Solve: 2x + 6 = 14.",
+                options: [
+                    "x = 3",
+                    "x = 4",
+                    "x = 5",
+                    "x = 10"
+                ],
+                correct: 1,
+                explanation:
+                    "Subtract 6 from both sides: 2x = 8. Divide by 2: x = 4."
+            }
+
+        ];
+
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let answerChecked = false;
+
+
+        const questionCounter =
+            document.getElementById("questionCounter");
+
+        const progressPercent =
+            document.getElementById("progressPercent");
+
+        const progressBar =
+            document.getElementById("progressBar");
+
+        const questionCategory =
+            document.getElementById("questionCategory");
+
+        const questionTitle =
+            document.getElementById("questionTitle");
+
+        const questionText =
+            document.getElementById("questionText");
+
+        const answerOptions =
+            document.getElementById("answerOptions");
+
+        const questionFeedback =
+            document.getElementById("questionFeedback");
+
+        const nextButton =
+            document.getElementById("nextButton");
+
+        const questionCard =
+            document.getElementById("questionCard");
+
+        const resultCard =
+            document.getElementById("resultCard");
+
+        const resultScore =
+            document.getElementById("resultScore");
+
+        const resultMessage =
+            document.getElementById("resultMessage");
+
+        const restartButton =
+            document.getElementById("restartButton");
+
+
+        function loadQuestion() {
+
+            const question = questions[currentQuestion];
+
+            selectedAnswer = null;
+            answerChecked = false;
+
+            questionCounter.textContent =
+                `Question ${currentQuestion + 1} of ${questions.length}`;
+
+            const percentage =
+                Math.round(
+                    ((currentQuestion + 1) / questions.length) * 100
+                );
+
+            progressPercent.textContent =
+                `${percentage}%`;
+
+            progressBar.style.width =
+                `${percentage}%`;
+
+            questionCategory.textContent =
+                question.category;
+
+            questionTitle.textContent =
+                question.title;
+
+            questionText.textContent =
+                question.text;
+
+            answerOptions.innerHTML = "";
+
+            questionFeedback.classList.remove("visible");
+            questionFeedback.textContent = "";
+
+            nextButton.disabled = true;
+            nextButton.textContent = "Check Answer";
+
+
+            question.options.forEach((option, index) => {
+
+                const button =
+                    document.createElement("button");
+
+                button.type = "button";
+                button.className = "option";
+
+                button.innerHTML = `
+                    <span class="option-letter">
+                        ${String.fromCharCode(65 + index)}
+                    </span>
+                    <span>${option}</span>
+                `;
+
+                button.addEventListener("click", () => {
+
+                    if (answerChecked) {
+                        return;
+                    }
+
+                    selectedAnswer = index;
+
+                    document
+                        .querySelectorAll(".option")
+                        .forEach((item) => {
+                            item.classList.remove("selected");
+                        });
+
+                    button.classList.add("selected");
+
+                    nextButton.disabled = false;
+
+                });
+
+                answerOptions.appendChild(button);
+
+            });
+
+        }
+
+
+        function checkAnswer() {
+
+            if (selectedAnswer === null) {
+                return;
+            }
+
+            const question = questions[currentQuestion];
+
+            const options =
+                document.querySelectorAll(".option");
+
+            answerChecked = true;
+
+            const isCorrect =
+                selectedAnswer === question.correct;
+
+            if (isCorrect) {
+                score++;
+            }
+
+            options.forEach((option, index) => {
+
+                option.disabled = true;
+
+                if (index === question.correct) {
+                    option.classList.add("correct");
+                }
+
+                if (
+                    index === selectedAnswer &&
+                    index !== question.correct
+                ) {
+                    option.classList.add("incorrect");
+                }
+
+            });
+
+            questionFeedback.textContent =
+                isCorrect
+                    ? `Correct! ${question.explanation}`
+                    : `Not quite. ${question.explanation}`;
+
+            questionFeedback.classList.add("visible");
+
+            nextButton.textContent =
+                currentQuestion === questions.length - 1
+                    ? "View Result"
+                    : "Next Question";
+
+        }
+
+
+        function nextQuestion() {
+
+            if (!answerChecked) {
+                checkAnswer();
+                return;
+            }
+
+            if (currentQuestion < questions.length - 1) {
+
+                currentQuestion++;
+                loadQuestion();
+
+            } else {
+
+                showResult();
+
+            }
+
+        }
+
+
+        function showResult() {
+
+            questionCard.style.display = "none";
+            resultCard.classList.add("visible");
+
+            resultScore.textContent =
+                `${score}/${questions.length}`;
+
+            const percentage =
+                Math.round(
+                    (score / questions.length) * 100
+                );
+
+            if (percentage >= 80) {
+
+                resultMessage.textContent =
+                    `You scored ${percentage}%. Your foundation is strong. ` +
+                    "The next stage will focus on deeper understanding.";
+
+            } else if (percentage >= 50) {
+
+                resultMessage.textContent =
+                    `You scored ${percentage}%. You have a foundation, ` +
+                    "but some concepts need additional practice.";
+
+            } else {
+
+                resultMessage.textContent =
+                    `You scored ${percentage}%. We will use your result ` +
+                    "to create a foundation-building learning path.";
+
+            }
+
+            const resultData = {
+                score: score,
+                total: questions.length,
+                percentage: percentage,
+                date: new Date().toISOString()
+            };
+
+            localStorage.setItem(
+                "synapseDiagnosticResult",
+                JSON.stringify(resultData)
+            );
+
+        }
+
+
+        function restartAssessment() {
+
+            currentQuestion = 0;
+            score = 0;
+
+            resultCard.classList.remove("visible");
+            questionCard.style.display = "block";
+
+            loadQuestion();
+
+        }
+
+
+        nextButton.addEventListener(
+            "click",
+            nextQuestion
+        );
+
+        restartButton.addEventListener(
+            "click",
+            restartAssessment
+        );
+
+
+        loadQuestion();
+
+    </script>
+
+</body>
+
+</html>

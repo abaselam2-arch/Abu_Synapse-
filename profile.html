@@ -1,0 +1,1196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SYNAPSE | Student Profile</title>
+
+  <style>
+    :root {
+      --bg: #080d18;
+      --card: #111a2b;
+      --card-light: #17243a;
+      --primary: #6c8cff;
+      --secondary: #8f6cff;
+      --text: #f3f6ff;
+      --muted: #9ba9c4;
+      --border: rgba(255, 255, 255, 0.09);
+      --success: #36d399;
+      --danger: #ff6b81;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top right, #1d2c55 0%, transparent 35%),
+        linear-gradient(135deg, #080d18, #0d1424);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      padding-bottom: 40px;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 6%;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 13, 24, 0.9);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(15px);
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--text);
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-button {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 9px 13px;
+      color: var(--text);
+      background: var(--card);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .nav-button:hover {
+      background: var(--card-light);
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 35px auto;
+    }
+
+    .page-heading {
+      margin-bottom: 25px;
+    }
+
+    .page-heading h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      margin-bottom: 10px;
+    }
+
+    .page-heading p {
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 700px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.85fr 1.5fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: linear-gradient(145deg, rgba(17, 26, 43, 0.98), rgba(12, 20, 35, 0.98));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-card {
+      text-align: center;
+    }
+
+    .avatar {
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      font-size: 36px;
+      font-weight: 800;
+      color: white;
+      border: 4px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .profile-card h2 {
+      font-size: 22px;
+      margin-bottom: 7px;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .profile-status {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 7px 12px;
+      border-radius: 30px;
+      background: rgba(54, 211, 153, 0.12);
+      color: var(--success);
+      font-size: 12px;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .stat {
+      padding: 15px 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .section-title {
+      font-size: 21px;
+      margin-bottom: 7px;
+    }
+
+    .section-description {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #dce5ff;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px;
+      background: #0a1221;
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.1);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .option {
+      position: relative;
+    }
+
+    .option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .option label {
+      display: block;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.025);
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 12px;
+      transition: 0.2s;
+    }
+
+    .option input:checked + label {
+      border-color: var(--primary);
+      background: rgba(108, 140, 255, 0.15);
+      color: white;
+    }
+
+    .goal-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .goal-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .goal-item input {
+      width: auto;
+      margin-top: 3px;
+      accent-color: var(--primary);
+    }
+
+    .goal-item label {
+      margin: 0;
+      cursor: pointer;
+      line-height: 1.5;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .range-wrapper {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    input[type="range"] {
+      padding: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .range-info {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .range-info strong {
+      color: var(--primary);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 25px;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .danger-button {
+      border-radius: 10px;
+      padding: 13px 18px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .primary-button {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      flex: 1;
+    }
+
+    .secondary-button {
+      background: var(--card-light);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .danger-button {
+      background: rgba(255, 107, 129, 0.1);
+      color: var(--danger);
+      border-color: rgba(255, 107, 129, 0.25);
+    }
+
+    .message {
+      display: none;
+      margin-top: 18px;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.success {
+      display: block;
+      color: var(--success);
+      background: rgba(54, 211, 153, 0.1);
+      border: 1px solid rgba(54, 211, 153, 0.2);
+    }
+
+    .message.error {
+      display: block;
+      color: var(--danger);
+      background: rgba(255, 107, 129, 0.1);
+      border: 1px solid rgba(255, 107, 129, 0.2);
+    }
+
+    .goal-summary {
+      margin-top: 25px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .goal-summary h3 {
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .summary-line:last-child {
+      border-bottom: none;
+    }
+
+    .summary-line span:first-child {
+      color: var(--muted);
+    }
+
+    .summary-line span:last-child {
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 35px;
+    }
+
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-card {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        width: 94%;
+        margin-top: 25px;
+      }
+
+      .card {
+        padding: 19px;
+      }
+
+      .form-row,
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar {
+        padding: 15px 4%;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .nav-button {
+        font-size: 11px;
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo">SYNAP<span>SE</span></div>
+
+    <div class="nav-actions">
+      <a class="nav-button" href="index.html">Home</a>
+      <a class="nav-button" href="dashboard.html">Dashboard</a>
+      <a class="nav-button" href="tutor.html">Tutor</a>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <section class="page-heading">
+      <h1>Student Profile</h1>
+      <p>
+        Personalize your SYNAPSE learning experience.
+        Set your learning goals, study preferences, and academic information.
+      </p>
+    </section>
+
+    <div class="layout">
+
+      <!-- PROFILE PREVIEW -->
+      <aside class="card profile-card">
+
+        <div class="avatar" id="avatarPreview">S</div>
+
+        <h2 id="profileNamePreview">Your Name</h2>
+
+        <p id="profileLevelPreview">
+          Student profile not completed
+        </p>
+
+        <p id="profileGoalPreview">
+          Add your learning goals to personalize your experience.
+        </p>
+
+        <div class="profile-status" id="profileStatus">
+          Profile not completed
+        </div>
+
+        <div class="quick-stats">
+          <div class="stat">
+            <strong id="studyMinutesPreview">30</strong>
+            <span>Daily Minutes</span>
+          </div>
+
+          <div class="stat">
+            <strong id="goalCountPreview">0</strong>
+            <span>Goals Selected</span>
+          </div>
+        </div>
+
+        <div class="goal-summary">
+          <h3>Profile Summary</h3>
+
+          <div class="summary-line">
+            <span>Education</span>
+            <span id="summaryEducation">Not set</span>
+          </div>
+
+          <div class="summary-line">
+            <span>Learning style</span>
+            <span id="summaryStyle">Not set</span>
+          </div>
+
+          <div class="summary-line">
+            <span>Preferred subject</span>
+            <span id="summarySubject">Not set</span>
+          </div>
+
+          <div class="summary-line">
+            <span>Weekly target</span>
+            <span id="summaryWeekly">Not set</span>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- PROFILE FORM -->
+      <section class="card">
+
+        <h2 class="section-title">Personal Information</h2>
+
+        <p class="section-description">
+          Enter your information. Your data is saved only in this browser
+          using local storage.
+        </p>
+
+        <form id="profileForm">
+
+          <div class="form-row">
+
+            <div class="form-group">
+              <label for="studentName">Full Name</label>
+              <input
+                type="text"
+                id="studentName"
+                placeholder="Enter your full name"
+                maxlength="80"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="studentAge">Age</label>
+              <input
+                type="number"
+                id="studentAge"
+                placeholder="Your age"
+                min="5"
+                max="100"
+              >
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label for="educationLevel">Education Level</label>
+
+            <select id="educationLevel" required>
+              <option value="">Select education level</option>
+              <option value="Middle School">Middle School</option>
+              <option value="High School">High School</option>
+              <option value="University - Freshman">University - Freshman</option>
+              <option value="University - Undergraduate">University - Undergraduate</option>
+              <option value="University - Graduate">University - Graduate</option>
+              <option value="Professional Learner">Professional Learner</option>
+              <option value="Self-Learner">Self-Learner</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="institution">School or Institution</label>
+
+            <input
+              type="text"
+              id="institution"
+              placeholder="Example: Jimma University"
+              maxlength="120"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="learningSubject">Main Learning Subject</label>
+
+            <select id="learningSubject" required>
+              <option value="">Select a subject</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="Physics">Physics</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Biology">Biology</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Engineering">Engineering</option>
+              <option value="English">English</option>
+              <option value="General Knowledge">General Knowledge</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Preferred Learning Style</label>
+
+            <div class="options">
+
+              <div class="option">
+                <input
+                  type="radio"
+                  id="styleVisual"
+                  name="learningStyle"
+                  value="Visual"
+                >
+                <label for="styleVisual">Visual learning</label>
+              </div>
+
+              <div class="option">
+                <input
+                  type="radio"
+                  id="stylePractice"
+                  name="learningStyle"
+                  value="Practice-based"
+                >
+                <label for="stylePractice">Practice-based</label>
+              </div>
+
+              <div class="option">
+                <input
+                  type="radio"
+                  id="styleReading"
+                  name="learningStyle"
+                  value="Reading"
+                >
+                <label for="styleReading">Reading and notes</label>
+              </div>
+
+              <div class="option">
+                <input
+                  type="radio"
+                  id="styleMixed"
+                  name="learningStyle"
+                  value="Mixed"
+                  checked
+                >
+                <label for="styleMixed">Mixed learning</label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Learning Goals</label>
+
+            <div class="goal-list">
+
+              <div class="goal-item">
+                <input
+                  type="checkbox"
+                  id="goalFundamentals"
+                  name="learningGoals"
+                  value="Understand fundamental concepts"
+                >
+                <label for="goalFundamentals">
+                  Understand fundamental concepts
+                </label>
+              </div>
+
+              <div class="goal-item">
+                <input
+                  type="checkbox"
+                  id="goalExam"
+                  name="learningGoals"
+                  value="Prepare for exams"
+                >
+                <label for="goalExam">
+                  Prepare for exams and assessments
+                </label>
+              </div>
+
+              <div class="goal-item">
+                <input
+                  type="checkbox"
+                  id="goalProblem"
+                  name="learningGoals"
+                  value="Improve problem solving"
+                >
+                <label for="goalProblem">
+                  Improve problem-solving skills
+                </label>
+              </div>
+
+              <div class="goal-item">
+                <input
+                  type="checkbox"
+                  id="goalCareer"
+                  name="learningGoals"
+                  value="Prepare for a career"
+                >
+                <label for="goalCareer">
+                  Prepare for a future career
+                </label>
+              </div>
+
+              <div class="goal-item">
+                <input
+                  type="checkbox"
+                  id="goalConsistency"
+                  name="learningGoals"
+                  value="Build consistent study habits"
+                >
+                <label for="goalConsistency">
+                  Build consistent study habits
+                </label>
+              </div>
+
+              <div class="goal-item">
+                <input
+                  type="checkbox"
+                  id="goalConfidence"
+                  name="learningGoals"
+                  value="Build confidence"
+                >
+                <label for="goalConfidence">
+                  Build confidence in learning
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="weeklyTarget">Weekly Study Target</label>
+
+            <select id="weeklyTarget">
+              <option value="2">2 hours per week</option>
+              <option value="4">4 hours per week</option>
+              <option value="6" selected>6 hours per week</option>
+              <option value="8">8 hours per week</option>
+              <option value="10">10 hours per week</option>
+              <option value="14">14 hours per week</option>
+              <option value="20">20 hours per week</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+
+            <label for="dailyMinutes">
+              Preferred Daily Study Time
+            </label>
+
+            <div class="range-wrapper">
+
+              <input
+                type="range"
+                id="dailyMinutes"
+                min="10"
+                max="180"
+                step="5"
+                value="30"
+              >
+
+              <div class="range-info">
+                <span>10 minutes</span>
+                <strong>
+                  <span id="dailyMinutesValue">30</span> minutes
+                </strong>
+                <span>180 minutes</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label for="learningMotivation">
+              What do you want to achieve?
+            </label>
+
+            <textarea
+              id="learningMotivation"
+              placeholder="Write your personal learning motivation..."
+              maxlength="500"
+            ></textarea>
+          </div>
+
+          <div class="button-row">
+
+            <button
+              type="submit"
+              class="primary-button"
+            >
+              Save Profile
+            </button>
+
+            <button
+              type="button"
+              class="secondary-button"
+              id="resetButton"
+            >
+              Reset Form
+            </button>
+
+            <button
+              type="button"
+              class="danger-button"
+              id="deleteButton"
+            >
+              Delete Profile
+            </button>
+
+          </div>
+
+          <div
+            class="message"
+            id="formMessage"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+        </form>
+
+      </section>
+
+    </div>
+
+    <div class="footer">
+      SYNAPSE — Adaptive Learning Infrastructure
+    </div>
+
+  </main>
+
+  <script>
+    const PROFILE_KEY = "synapse_student_profile";
+
+    const form = document.getElementById("profileForm");
+    const message = document.getElementById("formMessage");
+
+    const studentName = document.getElementById("studentName");
+    const studentAge = document.getElementById("studentAge");
+    const educationLevel = document.getElementById("educationLevel");
+    const institution = document.getElementById("institution");
+    const learningSubject = document.getElementById("learningSubject");
+    const weeklyTarget = document.getElementById("weeklyTarget");
+    const dailyMinutes = document.getElementById("dailyMinutes");
+    const dailyMinutesValue = document.getElementById("dailyMinutesValue");
+    const learningMotivation = document.getElementById("learningMotivation");
+
+    const avatarPreview = document.getElementById("avatarPreview");
+    const profileNamePreview = document.getElementById("profileNamePreview");
+    const profileLevelPreview = document.getElementById("profileLevelPreview");
+    const profileGoalPreview = document.getElementById("profileGoalPreview");
+    const profileStatus = document.getElementById("profileStatus");
+
+    const studyMinutesPreview = document.getElementById("studyMinutesPreview");
+    const goalCountPreview = document.getElementById("goalCountPreview");
+
+    const summaryEducation = document.getElementById("summaryEducation");
+    const summaryStyle = document.getElementById("summaryStyle");
+    const summarySubject = document.getElementById("summarySubject");
+    const summaryWeekly = document.getElementById("summaryWeekly");
+
+    function getSelectedGoals() {
+      const selected = [];
+
+      document
+        .querySelectorAll('input[name="learningGoals"]:checked')
+        .forEach((checkbox) => {
+          selected.push(checkbox.value);
+        });
+
+      return selected;
+    }
+
+    function getLearningStyle() {
+      const selected = document.querySelector(
+        'input[name="learningStyle"]:checked'
+      );
+
+      return selected ? selected.value : "Mixed";
+    }
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    function getInitials(name) {
+      if (!name || name.trim() === "") {
+        return "S";
+      }
+
+      const words = name.trim().split(/\s+/);
+
+      if (words.length === 1) {
+        return words[0].substring(0, 2).toUpperCase();
+      }
+
+      return (
+        words[0].charAt(0) +
+        words[words.length - 1].charAt(0)
+      ).toUpperCase();
+    }
+
+    function getProfileFromForm() {
+      return {
+        name: studentName.value.trim(),
+        age: studentAge.value,
+        educationLevel: educationLevel.value,
+        institution: institution.value.trim(),
+        subject: learningSubject.value,
+        learningStyle: getLearningStyle(),
+        goals: getSelectedGoals(),
+        weeklyTarget: Number(weeklyTarget.value),
+        dailyMinutes: Number(dailyMinutes.value),
+        motivation: learningMotivation.value.trim(),
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    function loadProfile() {
+      const savedProfile = localStorage.getItem(PROFILE_KEY);
+
+      if (!savedProfile) {
+        updatePreview(null);
+        return;
+      }
+
+      try {
+        const profile = JSON.parse(savedProfile);
+
+        studentName.value = profile.name || "";
+        studentAge.value = profile.age || "";
+        educationLevel.value = profile.educationLevel || "";
+        institution.value = profile.institution || "";
+        learningSubject.value = profile.subject || "";
+        weeklyTarget.value = profile.weeklyTarget || 6;
+        dailyMinutes.value = profile.dailyMinutes || 30;
+        learningMotivation.value = profile.motivation || "";
+
+        const styleInput = document.querySelector(
+          'input[name="learningStyle"][value="' +
+          profile.learningStyle +
+          '"]'
+        );
+
+        if (styleInput) {
+          styleInput.checked = true;
+        }
+
+        document
+          .querySelectorAll('input[name="learningGoals"]')
+          .forEach((checkbox) => {
+            checkbox.checked = Array.isArray(profile.goals) &&
+              profile.goals.includes(checkbox.value);
+          });
+
+        updateDailyMinutes();
+        updatePreview(profile);
+
+      } catch (error) {
+        console.error("Profile loading error:", error);
+        showMessage(
+          "The saved profile could not be loaded.",
+          "error"
+        );
+      }
+    }
+
+    function saveProfile(profile) {
+      localStorage.setItem(
+        PROFILE_KEY,
+        JSON.stringify(profile)
+      );
+    }
+
+    function updateDailyMinutes() {
+      dailyMinutesValue.textContent = dailyMinutes.value;
+      studyMinutesPreview.textContent = dailyMinutes.value;
+    }
+
+    function updatePreview(profile) {
+      if (!profile) {
+        avatarPreview.textContent = "S";
+        profileNamePreview.textContent = "Your Name";
+        profileLevelPreview.textContent = "Student profile not completed";
+        profileGoalPreview.textContent =
+          "Add your learning goals to personalize your experience.";
+        profileStatus.textContent = "Profile not completed";
+
+        goalCountPreview.textContent = "0";
+        studyMinutesPreview.textContent = dailyMinutes.value;
+
+        summaryEducation.textContent = "Not set";
+        summaryStyle.textContent = "Not set";
+        summarySubject.textContent = "Not set";
+        summaryWeekly.textContent = "Not set";
+
+        return;
+      }
+
+      const goals = Array.isArray(profile.goals)
+        ? profile.goals
+        : [];
+
+      avatarPreview.textContent = getInitials(profile.name);
+
+      profileNamePreview.textContent =
+        profile.name || "Your Name";
+
+      profileLevelPreview.textContent =
+        profile.educationLevel || "Education level not set";
+
+      profileGoalPreview.textContent =
+        profile.subject
+          ? "Main subject: " + profile.subject
+          : "Main subject not set";
+
+      profileStatus.textContent =
+        profile.name && profile.goals.length > 0
+          ? "Profile personalized"
+          : "Profile partially completed";
+
+      goalCountPreview.textContent = goals.length;
+
+      studyMinutesPreview.textContent =
+        profile.dailyMinutes || 30;
+
+      summaryEducation.textContent =
+        profile.educationLevel || "Not set";
+
+      summaryStyle.textContent =
+        profile.learningStyle || "Not set";
+
+      summarySubject.textContent =
+        profile.subject || "Not set";
+
+      summaryWeekly.textContent =
+        profile.weeklyTarget
+          ? profile.weeklyTarget + " hours"
+          : "Not set";
+    }
+
+    function clearForm() {
+      form.reset();
+
+      document.getElementById("styleMixed").checked = true;
+
+      dailyMinutes.value = 30;
+      dailyMinutesValue.textContent = "30";
+
+      updateDailyMinutes();
+      updatePreview(null);
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const profile = getProfileFromForm();
+
+      if (!profile.name) {
+        showMessage("Please enter your name.", "error");
+        return;
+      }
+
+      if (!profile.educationLevel) {
+        showMessage(
+          "Please select your education level.",
+          "error"
+        );
+        return;
+      }
+
+      if (!profile.subject) {
+        showMessage(
+          "Please select your main learning subject.",
+          "error"
+        );
+        return;
+      }
+
+      if (profile.goals.length === 0) {
+        showMessage(
+          "Please select at least one learning goal.",
+          "error"
+        );
+        return;
+      }
+
+      saveProfile(profile);
+      updatePreview(profile);
+
+      showMessage(
+        "Your student profile and learning goals were saved successfully.",
+        "success"
+      );
+    });
+
+    dailyMinutes.addEventListener("input", updateDailyMinutes);
+
+    document
+      .querySelectorAll('input[name="learningGoals"]')
+      .forEach((checkbox) => {
+        checkbox.addEventListener("change", function() {
+          const count = getSelectedGoals().length;
+          goalCountPreview.textContent = count;
+        });
+      });
+
+    document
+      .getElementById("resetButton")
+      .addEventListener("click", function() {
+        const confirmed = confirm(
+          "Reset the form without deleting your saved profile?"
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        clearForm();
+
+        showMessage(
+          "The form has been reset. Your saved profile was not deleted.",
+          "success"
+        );
+      });
+
+    document
+      .getElementById("deleteButton")
+      .addEventListener("click", function() {
+        const confirmed = confirm(
+          "Delete your saved SYNAPSE profile from this browser?"
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        localStorage.removeItem(PROFILE_KEY);
+
+        clearForm();
+
+        showMessage(
+          "Your saved profile has been deleted from this browser.",
+          "success"
+        );
+      });
+
+    loadProfile();
+    updateDailyMinutes();
+  </script>
+
+</body>
+</html>

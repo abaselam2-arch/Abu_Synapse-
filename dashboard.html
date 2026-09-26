@@ -1,0 +1,1412 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SYNAPSE | Learning Dashboard</title>
+
+    <style>
+
+/* =========================================
+   SYNAPSE DASHBOARD STATISTICS
+========================================= */
+
+.learning-statistics {
+    margin: 25px 0;
+    padding: 22px;
+    border: 1px solid rgba(111, 197, 255, 0.25);
+    border-radius: 20px;
+    background: linear-gradient(
+        135deg,
+        rgba(10, 28, 48, 0.96),
+        rgba(5, 14, 27, 0.96)
+    );
+    color: #eaf3ff;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.statistics-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.statistics-header h2 {
+    margin: 0;
+    color: #6fc5ff;
+    font-size: 1.3rem;
+}
+
+.statistics-status {
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: #8bffc8;
+    background: rgba(57, 211, 137, 0.12);
+    border: 1px solid rgba(57, 211, 137, 0.3);
+}
+
+.statistics-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.stat-card {
+    padding: 16px 10px;
+    border-radius: 15px;
+    text-align: center;
+    background: rgba(20, 45, 70, 0.7);
+    border: 1px solid rgba(111, 197, 255, 0.16);
+}
+
+.stat-icon {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: #ffd166;
+    font-size: 1.5rem;
+}
+
+.stat-card p {
+    margin: 8px 0 0;
+    color: #aebfd2;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.dashboard-progress-card {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 15px;
+    background: rgba(4, 14, 27, 0.8);
+    border: 1px solid rgba(111, 197, 255, 0.16);
+}
+
+.dashboard-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: #c5d8eb;
+}
+
+.dashboard-progress-header strong {
+    color: #ffd166;
+}
+
+.dashboard-progress-track {
+    width: 100%;
+    height: 12px;
+    margin-top: 14px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #1b3047;
+}
+
+.dashboard-progress-bar {
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(
+        90deg,
+        #4ca9ff,
+        #ffd166
+    );
+    transition: width 0.4s ease;
+}
+
+.dashboard-last-concept {
+    margin: 14px 0 0;
+    color: #9db4ca;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.dashboard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.dashboard-button {
+    display: inline-block;
+    padding: 12px 15px;
+    border: 1px solid #315a7b;
+    border-radius: 12px;
+    background: #203c57;
+    color: #dceeff;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.dashboard-button.primary {
+    background: #55b7ff;
+    border-color: #55b7ff;
+    color: #06111f;
+}
+
+.dashboard-button:hover {
+    opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+
+    .learning-statistics {
+        padding: 16px;
+    }
+
+    .statistics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+    }
+
+    .stat-icon {
+        margin: 0;
+    }
+
+    .stat-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .stat-card p {
+        margin: 3px 0 0;
+    }
+
+    .dashboard-actions {
+        flex-direction: column;
+    }
+
+    .dashboard-button {
+        text-align: center;
+    }
+
+}
+
+        :root {
+            --background: #070b14;
+            --surface: #0d1524;
+            --surface-light: #142239;
+            --border: rgba(148, 163, 184, 0.18);
+
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+
+            --gold: #eabf68;
+            --blue: #5ca9ff;
+            --green: #54d6a0;
+            --red: #ff7c89;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(92, 169, 255, 0.09),
+                    transparent 35%
+                ),
+                var(--background);
+
+            color: var(--text);
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        .container {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            border-bottom: 1px solid var(--border);
+            background: rgba(7, 11, 20, 0.95);
+        }
+
+        .header-content {
+            min-height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo-symbol {
+            width: 36px;
+            height: 36px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+
+            color: var(--gold);
+        }
+
+        .header-links {
+            display: flex;
+            gap: 18px;
+        }
+
+        .header-links a {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .header-links a:hover {
+            color: var(--gold);
+        }
+
+        /* MAIN */
+
+        main {
+            padding: 45px 0 80px;
+        }
+
+        .page-label {
+            color: var(--blue);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            margin-top: 12px;
+
+            font-size: clamp(30px, 6vw, 48px);
+            line-height: 1.15;
+        }
+
+        .intro {
+            max-width: 650px;
+            margin-top: 15px;
+
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* STATISTICS */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+
+            margin-top: 35px;
+        }
+
+        .stat-card {
+            padding: 20px;
+
+            border: 1px solid var(--border);
+            border-radius: 15px;
+
+            background: var(--surface);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .stat-value {
+            margin-top: 8px;
+
+            color: var(--gold);
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .stat-description {
+            margin-top: 4px;
+
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        /* PANELS */
+
+        .panel {
+            margin-top: 25px;
+            padding: 25px;
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20, 34, 57, 0.8),
+                    rgba(13, 21, 36, 0.85)
+                );
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+        .panel-heading h2 {
+            font-size: 20px;
+        }
+
+        .panel-heading span {
+            color: var(--blue);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* KNOWLEDGE MAP */
+
+        .knowledge-map {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .concept {
+            padding: 18px;
+
+            border: 1px solid var(--border);
+            border-radius: 13px;
+
+            background: rgba(7, 11, 20, 0.5);
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .concept:hover {
+            transform: translateY(-3px);
+            border-color: var(--gold);
+        }
+
+        .concept-number {
+            color: var(--gold);
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .concept h3 {
+            margin-top: 12px;
+            font-size: 15px;
+        }
+
+        .concept p {
+            margin-top: 7px;
+
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .concept-status {
+            display: inline-block;
+
+            margin-top: 14px;
+            padding: 4px 8px;
+
+            border-radius: 999px;
+
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--muted);
+
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        /* RECOMMENDATION */
+
+        .recommendation {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .recommendation h2 {
+            font-size: 22px;
+        }
+
+        .recommendation p {
+            max-width: 650px;
+            margin-top: 10px;
+
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 13px 20px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: var(--gold);
+            color: #171108;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            box-shadow: 0 10px 25px rgba(234, 191, 104, 0.2);
+        }
+
+        .secondary-action {
+            display: inline-block;
+
+            margin-top: 15px;
+            padding: 10px 15px;
+
+            border: 1px solid var(--border);
+            border-radius: 9px;
+
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* EMPTY RESULT */
+
+        .empty-message {
+            padding: 15px;
+
+            border-radius: 10px;
+
+            background: rgba(234, 191, 104, 0.07);
+            border: 1px solid rgba(234, 191, 104, 0.2);
+
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            padding: 28px 0;
+
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 800px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .knowledge-map {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .recommendation {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .header-links {
+                gap: 10px;
+            }
+
+            .header-links a {
+                font-size: 10px;
+            }
+
+            .stats-grid {
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-value {
+                font-size: 25px;
+            }
+
+            .knowledge-map {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="container header-content">
+
+            <a href="index.html" class="logo">
+                <span class="logo-symbol">S</span>
+                <span>SYNAPSE</span>
+            </a>
+
+            <nav class="header-links">
+                <a href="index.html">Home</a>
+                <a href="diagnostic.html">Diagnostic</a>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+<!-- SYNAPSE DYNAMIC LEARNING STATISTICS -->
+
+<section class="learning-statistics">
+
+    <div class="statistics-header">
+        <h2>Learning Overview</h2>
+
+        <span class="statistics-status">
+            LIVE
+        </span>
+    </div>
+
+    <div class="statistics-grid">
+
+        <div class="stat-card">
+            <span class="stat-icon">📚</span>
+
+            <h3 id="dashboardCompletedLessons">
+                0
+            </h3>
+
+            <p>Completed Lessons</p>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-icon">📊</span>
+
+            <h3 id="dashboardProgressPercentage">
+                0%
+            </h3>
+
+            <p>Learning Progress</p>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-icon">🎯</span>
+
+            <h3 id="dashboardTotalConcepts">
+                5
+            </h3>
+
+            <p>Available Concepts</p>
+        </div>
+
+    </div>
+
+    <div class="dashboard-progress-card">
+
+        <div class="dashboard-progress-header">
+
+            <span>Overall Progress</span>
+
+            <strong id="dashboardProgressLabel">
+                0%
+            </strong>
+
+        </div>
+
+        <div class="dashboard-progress-track">
+
+            <div
+                id="dashboardProgressBar"
+                class="dashboard-progress-bar">
+            </div>
+
+        </div>
+
+        <p
+            id="dashboardLastConcept"
+            class="dashboard-last-concept">
+            Start your first lesson to see progress.
+        </p>
+
+    </div>
+
+    <div class="dashboard-actions">
+
+        <button
+            id="refreshDashboardProgress"
+            class="dashboard-button">
+            🔄 Refresh Progress
+        </button>
+
+        <a
+            href="tutor.html"
+            class="dashboard-button primary">
+            Start Learning →
+        </a>
+<a href="profile.html" class="nav-button">
+  Student Profile
+</a>
+<a href="quiz.html" class="dashboard-button">
+  <span>📝</span>
+  <strong>Quiz & Examination</strong>
+  <small>Test your knowledge and review your results.</small>
+</a>
+    <a href="science.html" class="dashboard-button">
+  <span>🔬</span>
+  <strong>Science Learning Lab</strong>
+  <small>Physics, Chemistry, and Biology</small>
+</a> 
+      <a href="analytics.html" class="dashboard-button">
+  <span>📊</span>
+  <strong>Advanced Analytics</strong>
+  <small>Track your learning performance</small>
+</a>
+    </div>
+
+</section>
+
+        <div class="container">
+
+            <span class="page-label">
+                LEARNING INTELLIGENCE CENTER
+            </span>
+
+            <h1>
+                Your learning
+                dashboard.
+            </h1>
+
+            <p class="intro">
+                Review your diagnostic performance, explore
+                fundamental mathematics concepts, and prepare
+                for your next learning session.
+            </p>
+
+
+            <!-- STATISTICS -->
+
+            <section class="stats-grid">
+
+                <article class="stat-card">
+
+                    <div class="stat-label">
+                        DIAGNOSTIC SCORE
+                    </div>
+
+                    <div
+                        id="scoreValue"
+                        class="stat-value"
+                    >
+                        --%
+                    </div>
+
+                    <div class="stat-description">
+                        Latest assessment
+                    </div>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-label">
+                        QUESTIONS
+                    </div>
+
+                    <div
+                        id="questionValue"
+                        class="stat-value"
+                    >
+                        0/5
+                    </div>
+
+                    <div class="stat-description">
+                        Correct answers
+                    </div>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-label">
+                        LEARNING STATUS
+                    </div>
+
+                    <div
+                        id="statusValue"
+                        class="stat-value"
+                    >
+                        New
+                    </div>
+
+                    <div class="stat-description">
+                        Current foundation
+                    </div>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-label">
+                        CONCEPTS
+                    </div>
+
+                    <div class="stat-value">
+                        06
+                    </div>
+
+                    <div class="stat-description">
+                        Learning roadmap
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- KNOWLEDGE MAP -->
+
+            <section class="panel">
+
+                <div class="panel-heading">
+
+                    <h2>Knowledge Map</h2>
+
+                    <span>MATHEMATICS</span>
+
+                </div>
+
+                <div class="knowledge-map">
+
+                    <article class="concept">
+
+                        <div class="concept-number">
+                            CONCEPT 01
+                        </div>
+
+                        <h3>Arithmetic</h3>
+
+                        <p>
+                            Addition, subtraction,
+                            multiplication, and division.
+                        </p>
+
+                        <span class="concept-status">
+                            FOUNDATION
+                        </span>
+
+                    </article>
+
+                    <article class="concept">
+
+                        <div class="concept-number">
+                            CONCEPT 02
+                        </div>
+
+                        <h3>Fractions</h3>
+
+                        <p>
+                            Numerators, denominators,
+                            and fraction operations.
+                        </p>
+
+                        <span class="concept-status">
+                            FOUNDATION
+                        </span>
+
+                    </article>
+
+                    <article class="concept">
+
+                        <div class="concept-number">
+                            CONCEPT 03
+                        </div>
+
+                        <h3>Negative Numbers</h3>
+
+                        <p>
+                            Integers, number lines,
+                            and signed operations.
+                        </p>
+
+                        <span class="concept-status">
+                            FOUNDATION
+                        </span>
+
+                    </article>
+
+                    <article class="concept">
+
+                        <div class="concept-number">
+                            CONCEPT 04
+                        </div>
+
+                        <h3>Algebraic Expressions</h3>
+
+                        <p>
+                            Variables, coefficients,
+                            and substitution.
+                        </p>
+
+                        <span class="concept-status">
+                            DEVELOPING
+                        </span>
+
+                    </article>
+
+                    <article class="concept">
+
+                        <div class="concept-number">
+                            CONCEPT 05
+                        </div>
+
+                        <h3>Linear Equations</h3>
+
+                        <p>
+                            Solve equations and isolate
+                            unknown variables.
+                        </p>
+
+                        <span class="concept-status">
+                            DEVELOPING
+                        </span>
+
+                    </article>
+
+                    <article class="concept">
+
+                        <div class="concept-number">
+                            CONCEPT 06
+                        </div>
+
+                        <h3>Quadratic Equations</h3>
+
+                        <p>
+                            Explore quadratic expressions,
+                            roots, and solutions.
+                        </p>
+
+                        <span class="concept-status">
+                            FUTURE TOPIC
+                        </span>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- RECOMMENDATION -->
+
+            <section class="panel">
+
+                <div class="recommendation">
+
+                    <div>
+
+                        <div class="page-label">
+                            RECOMMENDED NEXT STEP
+                        </div>
+
+                        <h2 id="recommendationTitle">
+                            Strengthen your foundation
+                        </h2>
+
+                        <p id="recommendationText">
+                            Complete the diagnostic assessment
+                            to receive a personalized learning
+                            recommendation.
+                        </p>
+
+                        <a
+                            href="diagnostic.html"
+                            class="secondary-action"
+                        >
+                            Retake Diagnostic
+                        </a>
+
+                    </div>
+
+        <a
+    href="tutor.html"
+    class="action-button"
+>
+    Start Learning →
+</a>            
+
+                </div>
+
+            </section>
+
+
+            <!-- RESULT MESSAGE -->
+
+            <section
+                id="resultMessage"
+                class="panel"
+            >
+
+                <div class="panel-heading">
+                    <h2>Assessment Information</h2>
+                </div>
+
+                <div
+                    id="assessmentInfo"
+                    class="empty-message"
+                >
+                    Your assessment information will appear
+                    here after completing the diagnostic.
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <div class="container footer-content">
+
+            <p>
+                © 2026 SYNAPSE.
+                Adaptive Learning Infrastructure.
+            </p>
+
+            <p>
+                Learning through understanding.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        const savedResult =
+            localStorage.getItem(
+                "synapseDiagnosticResult"
+            );
+
+        const scoreValue =
+            document.getElementById("scoreValue");
+
+        const questionValue =
+            document.getElementById("questionValue");
+
+        const statusValue =
+            document.getElementById("statusValue");
+
+        const recommendationTitle =
+            document.getElementById("recommendationTitle");
+
+        const recommendationText =
+            document.getElementById("recommendationText");
+
+        const assessmentInfo =
+            document.getElementById("assessmentInfo");
+
+
+        if (savedResult) {
+
+            const result =
+                JSON.parse(savedResult);
+
+            scoreValue.textContent =
+                `${result.percentage}%`;
+
+            questionValue.textContent =
+                `${result.score}/${result.total}`;
+
+
+            if (result.percentage >= 80) {
+
+                statusValue.textContent =
+                    "Strong";
+
+                recommendationTitle.textContent =
+                    "Explore deeper mathematics";
+
+                recommendationText.textContent =
+                    "Your diagnostic score indicates a strong " +
+                    "foundation. Continue with algebraic " +
+                    "expressions and linear equations.";
+
+            } else if (result.percentage >= 50) {
+
+                statusValue.textContent =
+                    "Developing";
+
+                recommendationTitle.textContent =
+                    "Strengthen key concepts";
+
+                recommendationText.textContent =
+                    "Review arithmetic, fractions, and negative " +
+                    "numbers before progressing to more advanced " +
+                    "algebraic concepts.";
+
+            } else {
+
+                statusValue.textContent =
+                    "Foundation";
+
+                recommendationTitle.textContent =
+                    "Build your mathematics foundation";
+
+                recommendationText.textContent =
+                    "Start with arithmetic and fractions. " +
+                    "Practice each concept step by step " +
+                    "before moving to advanced topics.";
+
+            }
+
+
+            const assessmentDate =
+                new Date(result.date);
+
+            assessmentInfo.textContent =
+                `Latest result: ${result.score} out of ` +
+                `${result.total} correct answers ` +
+                `(${result.percentage}%). ` +
+                `Completed on ${assessmentDate.toLocaleDateString()}.`;
+
+        }
+
+
+        console.log(
+            "SYNAPSE dashboard loaded."
+        );
+
+    </script>
+
+<script>
+
+    /* =====================================
+       SYNAPSE DASHBOARD PROGRESS
+    ===================================== */
+
+    const SYNAPSE_PROGRESS_KEY =
+        "synapse_learning_progress";
+
+    const SYNAPSE_TOTAL_CONCEPTS = 5;
+
+
+    function getDashboardProgress() {
+
+        const savedProgress =
+            localStorage.getItem(
+                SYNAPSE_PROGRESS_KEY
+            );
+
+        if (!savedProgress) {
+
+            return {
+                completedLessons: [],
+                totalCompleted: 0,
+                lastConcept: null,
+                lastCompletedAt: null
+            };
+
+        }
+
+        try {
+
+            return JSON.parse(
+                savedProgress
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Dashboard progress error:",
+                error
+            );
+
+            return {
+                completedLessons: [],
+                totalCompleted: 0,
+                lastConcept: null,
+                lastCompletedAt: null
+            };
+
+        }
+
+    }
+
+
+    function getDashboardConceptName(
+        concept
+    ) {
+
+        const names = {
+
+            linear: "Linear Equations",
+
+            arithmetic: "Arithmetic",
+
+            fractions: "Fractions",
+
+            negative: "Negative Numbers",
+
+            algebra: "Algebraic Expressions"
+
+        };
+
+        return names[concept] || concept;
+
+    }
+
+
+    function updateDashboardProgress() {
+
+        const progress =
+            getDashboardProgress();
+
+        const completedLessons =
+            progress.completedLessons.length;
+
+        const percentage =
+            Math.min(
+                100,
+                Math.round(
+                    (
+                        completedLessons /
+                        SYNAPSE_TOTAL_CONCEPTS
+                    ) * 100
+                )
+            );
+
+        const completedElement =
+            document.getElementById(
+                "dashboardCompletedLessons"
+            );
+
+        const percentageElement =
+            document.getElementById(
+                "dashboardProgressPercentage"
+            );
+
+        const labelElement =
+            document.getElementById(
+                "dashboardProgressLabel"
+            );
+
+        const totalConceptsElement =
+            document.getElementById(
+                "dashboardTotalConcepts"
+            );
+
+        const progressBar =
+            document.getElementById(
+                "dashboardProgressBar"
+            );
+
+        const lastConceptElement =
+            document.getElementById(
+                "dashboardLastConcept"
+            );
+
+
+        if (completedElement) {
+
+            completedElement.textContent =
+                completedLessons;
+
+        }
+
+
+        if (percentageElement) {
+
+            percentageElement.textContent =
+                percentage + "%";
+
+        }
+
+
+        if (labelElement) {
+
+            labelElement.textContent =
+                percentage + "%";
+
+        }
+
+
+        if (totalConceptsElement) {
+
+            totalConceptsElement.textContent =
+                SYNAPSE_TOTAL_CONCEPTS;
+
+        }
+
+
+        if (progressBar) {
+
+            progressBar.style.width =
+                percentage + "%";
+
+        }
+
+
+        if (lastConceptElement) {
+
+            if (progress.lastConcept) {
+
+                lastConceptElement.textContent =
+                    "Last completed concept: " +
+                    getDashboardConceptName(
+                        progress.lastConcept
+                    );
+
+            } else {
+
+                lastConceptElement.textContent =
+                    "Start your first lesson " +
+                    "to see progress.";
+
+            }
+
+        }
+
+    }
+
+
+    const refreshProgressButton =
+        document.getElementById(
+            "refreshDashboardProgress"
+        );
+
+
+    if (refreshProgressButton) {
+
+        refreshProgressButton.addEventListener(
+            "click",
+            updateDashboardProgress
+        );
+
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            updateDashboardProgress();
+
+        }
+    );
+
+</script>
+</body>
+</html>
+
+</body>
+
+</html>

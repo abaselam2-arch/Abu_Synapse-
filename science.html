@@ -1,0 +1,1858 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SYNAPSE | Science Learning</title>
+
+  <style>
+    :root {
+      --bg: #080d18;
+      --card: #111a2b;
+      --card-light: #1a2942;
+      --primary: #6c8cff;
+      --secondary: #936cff;
+      --text: #f3f6ff;
+      --muted: #9daac2;
+      --border: rgba(255,255,255,.1);
+      --success: #36d399;
+      --danger: #ff6b81;
+      --warning: #f5bb54;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      padding-bottom: 40px;
+      background:
+        radial-gradient(circle at top right, #24345e, transparent 38%),
+        linear-gradient(135deg, #080d18, #0c1425);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    button, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 17px 6%;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(8,13,24,.94);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      font-size: 12px;
+    }
+
+    .container {
+      width: min(1050px, 92%);
+      margin: 32px auto;
+    }
+
+    .heading {
+      margin-bottom: 25px;
+    }
+
+    .heading h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      margin-bottom: 10px;
+    }
+
+    .heading p {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+      max-width: 700px;
+    }
+
+    .card {
+      padding: 25px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: linear-gradient(145deg, #111a2b, #0c1423);
+      box-shadow: 0 15px 45px rgba(0,0,0,.2);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .group {
+      margin-bottom: 20px;
+    }
+
+    .group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #dce5ff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px;
+      color: var(--text);
+      background: #0a1221;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 15px 0 25px;
+    }
+
+    .subject-button {
+      padding: 18px 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.025);
+      color: var(--text);
+      text-align: center;
+    }
+
+    .subject-button strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .subject-button.active {
+      background: rgba(108,140,255,.16);
+      border-color: var(--primary);
+    }
+
+    .subject-icon {
+      font-size: 27px;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mode-option {
+      position: relative;
+    }
+
+    .mode-option input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .mode-option label {
+      display: block;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255,255,255,.025);
+      cursor: pointer;
+    }
+
+    .mode-option input:checked + label {
+      border-color: var(--primary);
+      background: rgba(108,140,255,.14);
+    }
+
+    .mode-option small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 11px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      padding: 13px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .primary-button {
+      flex: 1;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .secondary-button {
+      color: var(--text);
+      background: var(--card-light);
+      border-color: var(--border);
+    }
+
+    .quiz-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .quiz-label {
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .quiz-title {
+      margin-top: 7px;
+      font-size: 24px;
+    }
+
+    .timer {
+      padding: 12px 18px;
+      border: 1px solid rgba(108,140,255,.3);
+      border-radius: 12px;
+      color: var(--primary);
+      background: rgba(108,140,255,.12);
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .timer.warning {
+      color: var(--warning);
+    }
+
+    .timer.danger {
+      color: var(--danger);
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .progress-track {
+      height: 8px;
+      margin-bottom: 25px;
+      border-radius: 20px;
+      background: #26334b;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width .2s;
+    }
+
+    .question-number {
+      display: inline-block;
+      margin-bottom: 15px;
+      padding: 6px 10px;
+      border-radius: 20px;
+      color: var(--primary);
+      background: rgba(108,140,255,.12);
+      font-size: 11px;
+    }
+
+    .question-text {
+      margin-bottom: 22px;
+      font-size: 21px;
+      line-height: 1.5;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.025);
+      color: var(--text);
+      text-align: left;
+    }
+
+    .answer.selected {
+      border-color: var(--primary);
+      background: rgba(108,140,255,.16);
+    }
+
+    .letter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #26334b;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .answer.selected .letter {
+      color: white;
+      background: var(--primary);
+    }
+
+    .answer-text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 25px;
+    }
+
+    .question-map {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .map-button {
+      width: 35px;
+      height: 35px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card-light);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .map-button.current {
+      background: var(--primary);
+      color: white;
+    }
+
+    .map-button.answered {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .map-button.current.answered {
+      color: white;
+    }
+
+    .result {
+      text-align: center;
+    }
+
+    .result h2 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .result p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .score {
+      margin: 20px 0 8px;
+      color: var(--primary);
+      font-size: 48px;
+      font-weight: 800;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+      margin: 25px 0;
+    }
+
+    .result-stat {
+      padding: 16px 8px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+    }
+
+    .result-stat strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 23px;
+    }
+
+    .result-stat span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .review {
+      margin-top: 25px;
+      text-align: left;
+    }
+
+    .review h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .review-item {
+      margin-bottom: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--danger);
+      border-radius: 12px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .review-item.correct {
+      border-left-color: var(--success);
+    }
+
+    .review-item h4 {
+      margin-bottom: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .review-item p {
+      margin-top: 6px;
+      font-size: 12px;
+    }
+
+    .correct-text {
+      color: var(--success) !important;
+    }
+
+    .incorrect-text {
+      color: var(--danger) !important;
+    }
+
+    .footer {
+      margin-top: 35px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .subject-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 19px;
+      }
+
+      .question-text {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .navbar {
+        padding: 14px 4%;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .nav-link {
+        padding: 8px;
+        font-size: 10px;
+      }
+
+      .mode-grid,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo">SYNAP<span>SE</span></div>
+
+    <div class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="tutor.html">Tutor</a>
+      <a class="nav-link" href="quiz.html">Math Quiz</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <section class="heading">
+      <h1>Science Learning Lab</h1>
+      <p>
+        Explore Physics, Chemistry, and Biology through
+        interactive practice questions and examinations.
+      </p>
+    </section>
+
+    <!-- SETUP -->
+    <section id="setupSection" class="card">
+
+      <h2 class="quiz-title">Choose Your Science</h2>
+
+      <p style="color:var(--muted);font-size:13px;line-height:1.6;margin:12px 0;">
+        Select a subject and configure your learning assessment.
+      </p>
+
+      <div class="subject-grid">
+
+        <button class="subject-button active" data-subject="Physics">
+          <div class="subject-icon">⚡</div>
+          <strong>Physics</strong>
+        </button>
+
+        <button class="subject-button" data-subject="Chemistry">
+          <div class="subject-icon">🧪</div>
+          <strong>Chemistry</strong>
+        </button>
+
+        <button class="subject-button" data-subject="Biology">
+          <div class="subject-icon">🧬</div>
+          <strong>Biology</strong>
+        </button>
+
+      </div>
+
+      <div class="setup-grid">
+
+        <div>
+
+          <div class="group">
+            <label for="topicSelect">Topic</label>
+
+            <select id="topicSelect"></select>
+          </div>
+
+          <div class="group">
+            <label for="questionCount">Number of Questions</label>
+
+            <select id="questionCount">
+              <option value="5" selected>5 Questions</option>
+              <option value="10">10 Questions</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="group">
+            <label>Assessment Mode</label>
+
+            <div class="mode-grid">
+
+              <div class="mode-option">
+                <input
+                  type="radio"
+                  id="practiceMode"
+                  name="assessmentMode"
+                  value="practice"
+                  checked
+                >
+
+                <label for="practiceMode">
+                  Practice
+                  <small>
+                    Learn without a time limit.
+                  </small>
+                </label>
+              </div>
+
+              <div class="mode-option">
+                <input
+                  type="radio"
+                  id="examMode"
+                  name="assessmentMode"
+                  value="exam"
+                >
+
+                <label for="examMode">
+                  Examination
+                  <small>
+                    Timed assessment.
+                  </small>
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="group">
+            <label for="examMinutes">Exam Time</label>
+
+            <select id="examMinutes">
+              <option value="5">5 Minutes</option>
+              <option value="10" selected>10 Minutes</option>
+              <option value="15">15 Minutes</option>
+              <option value="20">20 Minutes</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="button-row">
+        <button class="primary-button" id="startButton">
+          Start Science Assessment
+        </button>
+      </div>
+
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quizSection" class="card hidden">
+
+      <div class="quiz-header">
+
+        <div>
+          <div class="quiz-label" id="modeLabel">
+            Practice Mode
+          </div>
+
+          <h2 class="quiz-title" id="quizTitle">
+            Physics
+          </h2>
+        </div>
+
+        <div class="timer hidden" id="timer">
+          10:00
+        </div>
+
+      </div>
+
+      <div class="progress-text">
+        <span id="progressText">Question 1 of 5</span>
+        <span id="answeredText">Answered: 0</span>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <span class="question-number" id="questionNumber">
+        Question 1
+      </span>
+
+      <h2 class="question-text" id="questionText">
+        Question
+      </h2>
+
+      <div class="answers" id="answersContainer"></div>
+
+      <div class="navigation">
+
+        <button class="secondary-button" id="previousButton">
+          Previous
+        </button>
+
+        <button class="secondary-button" id="nextButton">
+          Next
+        </button>
+
+        <button class="primary-button" id="submitButton">
+          Submit Assessment
+        </button>
+
+      </div>
+
+      <div class="question-map" id="questionMap"></div>
+
+    </section>
+
+    <!-- RESULTS -->
+    <section id="resultSection" class="card result hidden">
+
+      <h2 id="resultTitle">Assessment Complete</h2>
+
+      <p id="resultMessage">
+        Review your science assessment.
+      </p>
+
+      <div class="score" id="resultPercentage">0%</div>
+
+      <p id="resultMode">Physics</p>
+
+      <div class="result-grid">
+
+        <div class="result-stat">
+          <strong class="correct-text" id="correctResult">0</strong>
+          <span>Correct</span>
+        </div>
+
+        <div class="result-stat">
+          <strong class="incorrect-text" id="incorrectResult">0</strong>
+          <span>Incorrect</span>
+        </div>
+
+        <div class="result-stat">
+          <strong id="unansweredResult">0</strong>
+          <span>Unanswered</span>
+        </div>
+
+      </div>
+
+      <div class="review">
+        <h3>Answer Review</h3>
+        <div id="reviewContainer"></div>
+      </div>
+
+      <div class="button-row">
+
+        <button class="primary-button" id="retryButton">
+          Try Again
+        </button>
+
+        <button class="secondary-button" id="newButton">
+          New Assessment
+        </button>
+
+        <button class="secondary-button" id="dashboardButton">
+          Dashboard
+        </button>
+
+      </div>
+
+    </section>
+
+    <div class="footer">
+      SYNAPSE — Adaptive Learning Infrastructure
+    </div>
+
+  </main>
+
+  <script>
+    /*
+      SYNAPSE SCIENCE ENGINE
+
+      Subjects:
+      - Physics
+      - Chemistry
+      - Biology
+
+      Storage:
+      - synapse_science_quiz_history
+      - synapse_adaptive_learning
+    */
+
+    const SCIENCE_HISTORY_KEY = "synapse_science_quiz_history";
+    const ADAPTIVE_KEY = "synapse_adaptive_learning";
+
+    const questionBank = {
+
+      Physics: {
+
+        "Motion": [
+          {
+            question: "What is the SI unit of speed?",
+            options: ["Newton", "Meter per second", "Joule", "Watt"],
+            answer: 1,
+            explanation: "Speed is measured in meters per second (m/s)."
+          },
+          {
+            question: "Which quantity describes a change in position over time?",
+            options: ["Mass", "Speed", "Density", "Temperature"],
+            answer: 1,
+            explanation: "Speed describes how quickly distance changes over time."
+          },
+          {
+            question: "What is the formula for average speed?",
+            options: [
+              "Time ÷ Distance",
+              "Distance ÷ Time",
+              "Mass × Acceleration",
+              "Force ÷ Area"
+            ],
+            answer: 1,
+            explanation: "Average speed equals total distance divided by total time."
+          },
+          {
+            question: "An object travels 20 m in 4 s. What is its average speed?",
+            options: ["4 m/s", "5 m/s", "16 m/s", "80 m/s"],
+            answer: 1,
+            explanation: "Speed = distance ÷ time = 20 ÷ 4 = 5 m/s."
+          },
+          {
+            question: "What is acceleration?",
+            options: [
+              "Change in velocity over time",
+              "Mass divided by volume",
+              "Distance only",
+              "Force multiplied by time"
+            ],
+            answer: 0,
+            explanation: "Acceleration is the rate of change of velocity."
+          }
+        ],
+
+        "Force and Energy": [
+          {
+            question: "What is the SI unit of force?",
+            options: ["Joule", "Watt", "Newton", "Pascal"],
+            answer: 2,
+            explanation: "Force is measured in newtons (N)."
+          },
+          {
+            question: "Which law is represented by F = ma?",
+            options: [
+              "Newton's first law",
+              "Newton's second law",
+              "Newton's third law",
+              "Law of reflection"
+            ],
+            answer: 1,
+            explanation: "Newton's second law states that force equals mass times acceleration."
+          },
+          {
+            question: "What is the SI unit of energy?",
+            options: ["Newton", "Joule", "Meter", "Ampere"],
+            answer: 1,
+            explanation: "Energy is measured in joules (J)."
+          },
+          {
+            question: "Which force pulls objects toward Earth?",
+            options: ["Friction", "Magnetism", "Gravity", "Tension"],
+            answer: 2,
+            explanation: "Gravity attracts objects toward Earth."
+          },
+          {
+            question: "What happens to kinetic energy when an object's speed increases?",
+            options: [
+              "It generally increases",
+              "It becomes zero",
+              "It always decreases",
+              "It does not exist"
+            ],
+            answer: 0,
+            explanation: "Kinetic energy depends on the square of speed, so it increases as speed increases."
+          }
+        ],
+
+        "Electricity": [
+          {
+            question: "What is the SI unit of electric current?",
+            options: ["Volt", "Ohm", "Ampere", "Watt"],
+            answer: 2,
+            explanation: "Electric current is measured in amperes (A)."
+          },
+          {
+            question: "What instrument measures electric current?",
+            options: ["Voltmeter", "Ammeter", "Thermometer", "Barometer"],
+            answer: 1,
+            explanation: "An ammeter measures electric current."
+          },
+          {
+            question: "What is the unit of electrical resistance?",
+            options: ["Ohm", "Joule", "Coulomb", "Newton"],
+            answer: 0,
+            explanation: "Electrical resistance is measured in ohms (Ω)."
+          },
+          {
+            question: "What is the basic relationship in Ohm's law?",
+            options: [
+              "V = IR",
+              "F = ma",
+              "P = mV",
+              "E = mc"
+            ],
+            answer: 0,
+            explanation: "Ohm's law is V = IR, where V is voltage, I is current, and R is resistance."
+          },
+          {
+            question: "Which material generally conducts electricity well?",
+            options: ["Rubber", "Glass", "Copper", "Dry wood"],
+            answer: 2,
+            explanation: "Copper is a good electrical conductor."
+          }
+        ]
+
+      },
+
+      Chemistry: {
+
+        "Atoms and Elements": [
+          {
+            question: "What is the smallest unit of an element that retains its chemical identity?",
+            options: ["Cell", "Atom", "Tissue", "Mixture"],
+            answer: 1,
+            explanation: "An atom is the smallest unit of an element that retains its chemical identity."
+          },
+          {
+            question: "Which particle has a negative electric charge?",
+            options: ["Proton", "Neutron", "Electron", "Nucleus"],
+            answer: 2,
+            explanation: "Electrons have a negative electric charge."
+          },
+          {
+            question: "Which particle has no electric charge?",
+            options: ["Electron", "Proton", "Neutron", "Ion"],
+            answer: 2,
+            explanation: "A neutron has no net electric charge."
+          },
+          {
+            question: "What does the atomic number represent?",
+            options: [
+              "Number of neutrons only",
+              "Number of protons",
+              "Total number of compounds",
+              "Number of energy levels only"
+            ],
+            answer: 1,
+            explanation: "The atomic number equals the number of protons in the nucleus."
+          },
+          {
+            question: "Which of the following is an element?",
+            options: ["Water", "Oxygen", "Salt water", "Carbon dioxide"],
+            answer: 1,
+            explanation: "Oxygen is an element. Water and carbon dioxide are compounds."
+          }
+        ],
+
+        "Chemical Reactions": [
+          {
+            question: "What is a chemical reaction?",
+            options: [
+              "A change that forms new substances",
+              "Only a change in shape",
+              "Only melting",
+              "A change in location"
+            ],
+            answer: 0,
+            explanation: "A chemical reaction produces one or more new substances."
+          },
+          {
+            question: "Which gas is commonly required for combustion?",
+            options: ["Nitrogen", "Oxygen", "Helium", "Argon"],
+            answer: 1,
+            explanation: "Oxygen supports ordinary combustion."
+          },
+          {
+            question: "What is the pH of a neutral solution at approximately room temperature?",
+            options: ["0", "5", "7", "14"],
+            answer: 2,
+            explanation: "A neutral aqueous solution has a pH of approximately 7 at room temperature."
+          },
+          {
+            question: "Which is a sign that a chemical reaction may have occurred?",
+            options: [
+              "Gas formation",
+              "Only cutting paper",
+              "Only changing position",
+              "Only measuring length"
+            ],
+            answer: 0,
+            explanation: "Gas formation can be evidence of a chemical reaction, although context matters."
+          },
+          {
+            question: "What is a reactant?",
+            options: [
+              "A substance present at the start of a chemical reaction",
+              "Only the final product",
+              "A measuring instrument",
+              "A type of energy"
+            ],
+            answer: 0,
+            explanation: "Reactants are the starting substances in a chemical reaction."
+          }
+        ],
+
+        "Periodic Table": [
+          {
+            question: "What does the periodic table organize?",
+            options: [
+              "Living organisms",
+              "Chemical elements",
+              "Planets only",
+              "Types of energy"
+            ],
+            answer: 1,
+            explanation: "The periodic table organizes chemical elements according to their properties and atomic structure."
+          },
+          {
+            question: "Which element has the symbol O?",
+            options: ["Gold", "Oxygen", "Osmium only", "Hydrogen"],
+            answer: 1,
+            explanation: "The symbol O represents oxygen."
+          },
+          {
+            question: "What is the symbol for sodium?",
+            options: ["S", "So", "Na", "Sd"],
+            answer: 2,
+            explanation: "Sodium has the chemical symbol Na."
+          },
+          {
+            question: "Which group contains the noble gases?",
+            options: ["Group 1", "Group 2", "Group 17", "Group 18"],
+            answer: 3,
+            explanation: "In the modern periodic table, noble gases are in Group 18."
+          },
+          {
+            question: "Which of these is a metal?",
+            options: ["Oxygen", "Iron", "Chlorine", "Neon"],
+            answer: 1,
+            explanation: "Iron is a metal."
+          }
+        ]
+
+      },
+
+      Biology: {
+
+        "Cells": [
+          {
+            question: "What is the basic structural and functional unit of life?",
+            options: ["Organ", "Cell", "Tissue", "System"],
+            answer: 1,
+            explanation: "The cell is the basic structural and functional unit of life."
+          },
+          {
+            question: "Which structure controls many activities of a eukaryotic cell?",
+            options: ["Cell wall", "Nucleus", "Ribosome only", "Vacuole only"],
+            answer: 1,
+            explanation: "The nucleus contains genetic material and regulates many cell activities."
+          },
+          {
+            question: "Which organelle is associated with photosynthesis in plant cells?",
+            options: ["Mitochondrion", "Chloroplast", "Nucleus", "Ribosome"],
+            answer: 1,
+            explanation: "Chloroplasts contain chlorophyll and are associated with photosynthesis."
+          },
+          {
+            question: "Which organelle is a major site of aerobic cellular respiration?",
+            options: ["Mitochondrion", "Cell wall", "Golgi apparatus", "Nucleolus"],
+            answer: 0,
+            explanation: "Mitochondria are major sites of aerobic cellular respiration."
+          },
+          {
+            question: "Which structure is found in plant cells and provides support?",
+            options: ["Cell wall", "Only nucleus", "Only ribosome", "Centriole"],
+            answer: 0,
+            explanation: "The plant cell wall provides structural support."
+          }
+        ],
+
+        "Human Biology": [
+          {
+            question: "Which organ pumps blood around the body?",
+            options: ["Lung", "Heart", "Kidney", "Stomach"],
+            answer: 1,
+            explanation: "The heart pumps blood through the circulatory system."
+          },
+          {
+            question: "Which organ is primarily responsible for gas exchange in humans?",
+            options: ["Lung", "Liver", "Pancreas", "Skin only"],
+            answer: 0,
+            explanation: "Gas exchange occurs mainly in the alveoli of the lungs."
+          },
+          {
+            question: "Which system breaks down food and absorbs nutrients?",
+            options: [
+              "Digestive system",
+              "Skeletal system",
+              "Nervous system",
+              "Endocrine system only"
+            ],
+            answer: 0,
+            explanation: "The digestive system processes food and absorbs nutrients."
+          },
+          {
+            question: "Which blood cells help defend the body against pathogens?",
+            options: [
+              "Red blood cells",
+              "White blood cells",
+              "Platelets only",
+              "Plasma only"
+            ],
+            answer: 1,
+            explanation: "White blood cells participate in immune defense."
+          },
+          {
+            question: "Which organ filters blood and produces urine?",
+            options: ["Heart", "Kidney", "Lung", "Brain"],
+            answer: 1,
+            explanation: "The kidneys filter blood and produce urine."
+          }
+        ],
+
+        "Genetics and Plants": [
+          {
+            question: "What is DNA?",
+            options: [
+              "A type of sugar only",
+              "A molecule carrying genetic information",
+              "A cell organelle only",
+              "A type of tissue"
+            ],
+            answer: 1,
+            explanation: "DNA carries genetic information in living organisms."
+          },
+          {
+            question: "What is photosynthesis?",
+            options: [
+              "The breakdown of food in the stomach",
+              "The process plants use to convert light energy into chemical energy",
+              "The movement of blood",
+              "The division of rocks"
+            ],
+            answer: 1,
+            explanation: "Photosynthesis converts light energy into chemical energy stored in organic compounds."
+          },
+          {
+            question: "Which gas do plants commonly take in during photosynthesis?",
+            options: ["Oxygen", "Carbon dioxide", "Helium", "Hydrogen only"],
+            answer: 1,
+            explanation: "Plants take in carbon dioxide for photosynthesis."
+          },
+          {
+            question: "What is a gene?",
+            options: [
+              "A unit of hereditary information",
+              "A type of organ",
+              "A digestive enzyme only",
+              "A type of tissue"
+            ],
+            answer: 0,
+            explanation: "A gene is a region of genetic material associated with a hereditary trait or function."
+          },
+          {
+            question: "Which part of a plant commonly absorbs water and minerals from soil?",
+            options: ["Flower", "Root", "Fruit", "Seed coat only"],
+            answer: 1,
+            explanation: "Roots absorb water and minerals from the soil."
+          }
+        ]
+
+      }
+
+    };
+
+    let currentSubject = "Physics";
+    let currentTopic = "";
+    let currentQuestions = [];
+    let selectedAnswers = [];
+    let currentIndex = 0;
+    let assessmentMode = "practice";
+    let totalSeconds = 0;
+    let timerInterval = null;
+    let assessmentActive = false;
+    let assessmentFinished = false;
+
+    const setupSection = document.getElementById("setupSection");
+    const quizSection = document.getElementById("quizSection");
+    const resultSection = document.getElementById("resultSection");
+
+    const topicSelect = document.getElementById("topicSelect");
+    const questionCount = document.getElementById("questionCount");
+    const examMinutes = document.getElementById("examMinutes");
+
+    const startButton = document.getElementById("startButton");
+    const modeLabel = document.getElementById("modeLabel");
+    const quizTitle = document.getElementById("quizTitle");
+    const timer = document.getElementById("timer");
+
+    const progressText = document.getElementById("progressText");
+    const answeredText = document.getElementById("answeredText");
+    const progressFill = document.getElementById("progressFill");
+
+    const questionNumber = document.getElementById("questionNumber");
+    const questionText = document.getElementById("questionText");
+    const answersContainer = document.getElementById("answersContainer");
+    const questionMap = document.getElementById("questionMap");
+
+    const previousButton = document.getElementById("previousButton");
+    const nextButton = document.getElementById("nextButton");
+    const submitButton = document.getElementById("submitButton");
+
+    const resultTitle = document.getElementById("resultTitle");
+    const resultMessage = document.getElementById("resultMessage");
+    const resultPercentage = document.getElementById("resultPercentage");
+    const resultMode = document.getElementById("resultMode");
+
+    const correctResult = document.getElementById("correctResult");
+    const incorrectResult = document.getElementById("incorrectResult");
+    const unansweredResult = document.getElementById("unansweredResult");
+    const reviewContainer = document.getElementById("reviewContainer");
+
+    function shuffle(array) {
+      const copy = [...array];
+
+      for (let i = copy.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+
+        [copy[i], copy[randomIndex]] = [
+          copy[randomIndex],
+          copy[i]
+        ];
+      }
+
+      return copy;
+    }
+
+    function updateTopics() {
+      topicSelect.innerHTML = "";
+
+      const topics = Object.keys(questionBank[currentSubject]);
+
+      topics.forEach((topic) => {
+        const option = document.createElement("option");
+
+        option.value = topic;
+        option.textContent = topic;
+
+        topicSelect.appendChild(option);
+      });
+
+      currentTopic = topics[0] || "";
+    }
+
+    function selectSubject(subject) {
+      currentSubject = subject;
+
+      document
+        .querySelectorAll(".subject-button")
+        .forEach((button) => {
+          button.classList.toggle(
+            "active",
+            button.dataset.subject === subject
+          );
+        });
+
+      updateTopics();
+    }
+
+    function getMode() {
+      const selected = document.querySelector(
+        'input[name="assessmentMode"]:checked'
+      );
+
+      return selected ? selected.value : "practice";
+    }
+
+    function prepareQuestions() {
+      currentTopic = topicSelect.value;
+
+      const pool = questionBank[currentSubject][currentTopic] || [];
+
+      const count = Math.min(
+        Number(questionCount.value),
+        pool.length
+      );
+
+      currentQuestions = shuffle(pool).slice(0, count);
+
+      selectedAnswers = new Array(currentQuestions.length).fill(null);
+    }
+
+    function startAssessment() {
+      assessmentMode = getMode();
+
+      prepareQuestions();
+
+      if (!currentQuestions.length) {
+        alert("No questions are available for this topic.");
+        return;
+      }
+
+      currentIndex = 0;
+      assessmentActive = true;
+      assessmentFinished = false;
+
+      setupSection.classList.add("hidden");
+      resultSection.classList.add("hidden");
+      quizSection.classList.remove("hidden");
+
+      quizTitle.textContent =
+        currentSubject + " — " + currentTopic;
+
+      modeLabel.textContent =
+        assessmentMode === "exam"
+          ? "Examination Mode"
+          : "Practice Mode";
+
+      if (assessmentMode === "exam") {
+        totalSeconds = Number(examMinutes.value) * 60;
+
+        timer.classList.remove("hidden");
+        updateTimer();
+
+        clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+          totalSeconds--;
+
+          updateTimer();
+
+          if (totalSeconds <= 0) {
+            clearInterval(timerInterval);
+            finishAssessment(true);
+          }
+        }, 1000);
+
+      } else {
+        timer.classList.add("hidden");
+        clearInterval(timerInterval);
+      }
+
+      renderQuestion();
+    }
+
+    function updateTimer() {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+
+      timer.textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
+
+      timer.classList.remove("warning", "danger");
+
+      if (totalSeconds <= 60) {
+        timer.classList.add("danger");
+      } else if (totalSeconds <= 180) {
+        timer.classList.add("warning");
+      }
+    }
+
+    function renderQuestion() {
+      const question = currentQuestions[currentIndex];
+
+      if (!question) {
+        return;
+      }
+
+      const total = currentQuestions.length;
+      const number = currentIndex + 1;
+
+      questionNumber.textContent = "Question " + number;
+
+      progressText.textContent =
+        "Question " + number + " of " + total;
+
+      const answered = selectedAnswers.filter(
+        (answer) => answer !== null
+      ).length;
+
+      answeredText.textContent = "Answered: " + answered;
+
+      progressFill.style.width =
+        (number / total * 100) + "%";
+
+      questionText.textContent = question.question;
+
+      answersContainer.innerHTML = "";
+
+      question.options.forEach((option, index) => {
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "answer";
+
+        if (selectedAnswers[currentIndex] === index) {
+          button.classList.add("selected");
+        }
+
+        const letter = document.createElement("span");
+
+        letter.className = "letter";
+        letter.textContent = String.fromCharCode(65 + index);
+
+        const text = document.createElement("span");
+
+        text.className = "answer-text";
+        text.textContent = option;
+
+        button.appendChild(letter);
+        button.appendChild(text);
+
+        button.addEventListener("click", () => {
+          selectedAnswers[currentIndex] = index;
+          renderQuestion();
+        });
+
+        answersContainer.appendChild(button);
+      });
+
+      previousButton.disabled = currentIndex === 0;
+      previousButton.style.opacity =
+        currentIndex === 0 ? ".5" : "1";
+
+      nextButton.disabled = currentIndex === total - 1;
+      nextButton.style.opacity =
+        currentIndex === total - 1 ? ".5" : "1";
+
+      submitButton.classList.toggle(
+        "hidden",
+        currentIndex !== total - 1
+      );
+
+      renderQuestionMap();
+    }
+
+    function renderQuestionMap() {
+      questionMap.innerHTML = "";
+
+      currentQuestions.forEach((question, index) => {
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "map-button";
+        button.textContent = index + 1;
+
+        if (index === currentIndex) {
+          button.classList.add("current");
+        }
+
+        if (selectedAnswers[index] !== null) {
+          button.classList.add("answered");
+        }
+
+        button.addEventListener("click", () => {
+          currentIndex = index;
+          renderQuestion();
+        });
+
+        questionMap.appendChild(button);
+      });
+    }
+
+    function calculateResults() {
+      let correct = 0;
+      let incorrect = 0;
+      let unanswered = 0;
+
+      currentQuestions.forEach((question, index) => {
+        const selected = selectedAnswers[index];
+
+        if (selected === null) {
+          unanswered++;
+        } else if (selected === question.answer) {
+          correct++;
+        } else {
+          incorrect++;
+        }
+      });
+
+      const total = currentQuestions.length;
+
+      return {
+        subject: currentSubject,
+        topic: currentTopic,
+        mode: assessmentMode,
+        total,
+        correct,
+        incorrect,
+        unanswered,
+        percentage: Math.round((correct / total) * 100),
+        completedAt: new Date().toISOString()
+      };
+    }
+
+    function finishAssessment(fromTimer = false) {
+      if (assessmentFinished) {
+        return;
+      }
+
+      if (!fromTimer) {
+        const unanswered = selectedAnswers.filter(
+          (answer) => answer === null
+        ).length;
+
+        if (unanswered > 0) {
+          const proceed = confirm(
+            "You have " +
+            unanswered +
+            " unanswered question(s). Submit anyway?"
+          );
+
+          if (!proceed) {
+            return;
+          }
+        }
+      }
+
+      assessmentFinished = true;
+      assessmentActive = false;
+
+      clearInterval(timerInterval);
+
+      const result = calculateResults();
+
+      saveHistory(result);
+      updateAdaptiveData(result);
+      showResults(result);
+
+      quizSection.classList.add("hidden");
+      resultSection.classList.remove("hidden");
+    }
+
+    function saveHistory(result) {
+      let history = [];
+
+      try {
+        history = JSON.parse(
+          localStorage.getItem(SCIENCE_HISTORY_KEY) || "[]"
+        );
+
+        if (!Array.isArray(history)) {
+          history = [];
+        }
+      } catch (error) {
+        history = [];
+      }
+
+      history.push(result);
+
+      if (history.length > 50) {
+        history = history.slice(-50);
+      }
+
+      localStorage.setItem(
+        SCIENCE_HISTORY_KEY,
+        JSON.stringify(history)
+      );
+    }
+
+    function updateAdaptiveData(result) {
+      let data = {
+        totalAnswers: 0,
+        correctAnswers: 0,
+        incorrectAnswers: 0,
+        hintsUsed: 0,
+        concepts: {}
+      };
+
+      try {
+        const saved = JSON.parse(
+          localStorage.getItem(ADAPTIVE_KEY) || "null"
+        );
+
+        if (saved && typeof saved === "object") {
+          data = {
+            ...data,
+            ...saved
+          };
+        }
+      } catch (error) {
+        console.warn("Adaptive data could not be loaded.");
+      }
+
+      if (!data.concepts) {
+        data.concepts = {};
+      }
+
+      const conceptKey =
+        currentSubject + " — " + currentTopic;
+
+      if (!data.concepts[conceptKey]) {
+        data.concepts[conceptKey] = {
+          attempts: 0,
+          correct: 0,
+          incorrect: 0,
+          hints: 0
+        };
+      }
+
+      const concept = data.concepts[conceptKey];
+
+      concept.attempts += result.total;
+      concept.correct += result.correct;
+      concept.incorrect += result.incorrect;
+
+      data.totalAnswers += result.correct + result.incorrect;
+      data.correctAnswers += result.correct;
+      data.incorrectAnswers += result.incorrect;
+
+      data.lastQuiz = {
+        subject: result.subject,
+        topic: result.topic,
+        percentage: result.percentage,
+        completedAt: result.completedAt
+      };
+
+      localStorage.setItem(
+        ADAPTIVE_KEY,
+        JSON.stringify(data)
+      );
+    }
+
+    function showResults(result) {
+      const passed = result.percentage >= 50;
+
+      resultTitle.textContent = passed
+        ? "Assessment Complete"
+        : "Keep Practicing";
+
+      resultMessage.textContent = passed
+        ? "Review your answers and continue developing your science knowledge."
+        : "Study the explanations and try the assessment again.";
+
+      resultPercentage.textContent =
+        result.percentage + "%";
+
+      resultMode.textContent =
+        result.subject +
+        " • " +
+        result.topic +
+        " • " +
+        (result.mode === "exam" ? "Examination" : "Practice");
+
+      correctResult.textContent = result.correct;
+      incorrectResult.textContent = result.incorrect;
+      unansweredResult.textContent = result.unanswered;
+
+      reviewContainer.innerHTML = "";
+
+      currentQuestions.forEach((question, index) => {
+        const selected = selectedAnswers[index];
+        const correct = selected === question.answer;
+
+        const item = document.createElement("div");
+
+        item.className =
+          "review-item" +
+          (correct ? " correct" : "");
+
+        const heading = document.createElement("h4");
+
+        heading.textContent =
+          (index + 1) + ". " + question.question;
+
+        const status = document.createElement("p");
+
+        status.className = correct
+          ? "correct-text"
+          : "incorrect-text";
+
+        status.textContent = correct
+          ? "Correct answer"
+          : selected === null
+            ? "Not answered"
+            : "Incorrect answer";
+
+        const selectedText = document.createElement("p");
+
+        selectedText.textContent =
+          "Your answer: " +
+          (selected === null
+            ? "Not answered"
+            : question.options[selected]);
+
+        const correctText = document.createElement("p");
+
+        correctText.className = "correct-text";
+
+        correctText.textContent =
+          "Correct answer: " +
+          question.options[question.answer];
+
+        const explanation = document.createElement("p");
+
+        explanation.textContent =
+          "Explanation: " + question.explanation;
+
+        item.appendChild(heading);
+        item.appendChild(status);
+        item.appendChild(selectedText);
+        item.appendChild(correctText);
+        item.appendChild(explanation);
+
+        reviewContainer.appendChild(item);
+      });
+    }
+
+    function resetState() {
+      clearInterval(timerInterval);
+
+      currentQuestions = [];
+      selectedAnswers = [];
+      currentIndex = 0;
+      assessmentActive = false;
+      assessmentFinished = false;
+      totalSeconds = 0;
+    }
+
+    function returnToSetup() {
+      resetState();
+
+      quizSection.classList.add("hidden");
+      resultSection.classList.add("hidden");
+      setupSection.classList.remove("hidden");
+    }
+
+    document
+      .querySelectorAll(".subject-button")
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          selectSubject(button.dataset.subject);
+        });
+      });
+
+    topicSelect.addEventListener("change", () => {
+      currentTopic = topicSelect.value;
+    });
+
+    startButton.addEventListener("click", startAssessment);
+
+    previousButton.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    });
+
+    nextButton.addEventListener("click", () => {
+      if (currentIndex < currentQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      }
+    });
+
+    submitButton.addEventListener("click", () => {
+      finishAssessment(false);
+    });
+
+    document
+      .getElementById("retryButton")
+      .addEventListener("click", () => {
+        resetState();
+
+        prepareQuestions();
+
+        assessmentActive = true;
+
+        resultSection.classList.add("hidden");
+        quizSection.classList.remove("hidden");
+
+        if (assessmentMode === "exam") {
+          totalSeconds = Number(examMinutes.value) * 60;
+
+          timer.classList.remove("hidden");
+          updateTimer();
+
+          timerInterval = setInterval(() => {
+            totalSeconds--;
+            updateTimer();
+
+            if (totalSeconds <= 0) {
+              clearInterval(timerInterval);
+              finishAssessment(true);
+            }
+          }, 1000);
+        }
+
+        renderQuestion();
+      });
+
+    document
+      .getElementById("newButton")
+      .addEventListener("click", returnToSetup);
+
+    document
+      .getElementById("dashboardButton")
+      .addEventListener("click", () => {
+        window.location.href = "dashboard.html";
+      });
+
+    window.addEventListener("beforeunload", (event) => {
+      if (assessmentActive && !assessmentFinished) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    });
+
+    updateTopics();
+
+  </script>
+
+</body>
+</html>

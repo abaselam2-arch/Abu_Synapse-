@@ -1,0 +1,1896 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color"
+        content="#07111f">
+
+    <title>SYNAPSE | Socratic Tutor</title>
+
+    <style>
+
+/* =========================================
+   ADAPTIVE FEEDBACK CARD
+========================================= */
+
+.adaptive-feedback-card {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 209, 102, 0.25);
+    background: linear-gradient(
+        135deg,
+        rgba(54, 43, 25, 0.8),
+        rgba(15, 24, 38, 0.95)
+    );
+}
+
+.adaptive-feedback-card h3 {
+    margin: 0 0 16px;
+    color: #ffd166;
+    font-size: 1rem;
+}
+
+.adaptive-stat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #c4d4e4;
+    font-size: 0.9rem;
+}
+
+.adaptive-stat-row:last-child {
+    border-bottom: none;
+}
+
+.adaptive-stat-row strong {
+    color: #8bcaff;
+    text-align: right;
+}
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #eaf3ff;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    #12385d,
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #030914,
+                    #07111f,
+                    #0c1b2e
+                );
+        }
+
+        .container {
+            width: min(100% - 30px, 900px);
+            margin: auto;
+            padding: 25px 0 45px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .brand {
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #6fc5ff;
+        }
+
+        .brand span {
+            color: #ffd166;
+        }
+
+        .status {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            background: rgba(57, 211, 137, 0.13);
+            border: 1px solid rgba(57, 211, 137, 0.35);
+            color: #72e6a9;
+        }
+
+        .hero {
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            line-height: 1.15;
+        }
+
+        .hero h1 span {
+            color: #6fc5ff;
+        }
+
+        .hero p {
+            color: #aebfd2;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .card {
+            margin-top: 18px;
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(115, 185, 255, 0.2);
+            background: rgba(8, 22, 39, 0.88);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c7d8e9;
+            font-weight: bold;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #2d4b68;
+            background: #0a192b;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #6fc5ff;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #bcd0e5;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #172b41;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(
+                90deg,
+                #4ca9ff,
+                #ffd166
+            );
+            transition: width 0.3s ease;
+        }
+
+        .saved-progress-card ::after
+<div class="adaptive-feedback-card">
+
+    <h3>🧠 Adaptive Learning Feedback</h3>
+
+    <div class="adaptive-stat-row">
+
+        <span>Total Answers</span>
+
+        <strong id="adaptiveTotalAnswers">
+            0
+        </strong>
+
+    </div>
+
+    <div class="adaptive-stat-row">
+
+        <span>Correct Answers</span>
+
+        <strong id="adaptiveCorrectAnswers">
+            0
+        </strong>
+
+    </div>
+
+    <div class="adaptive-stat-row">
+
+        <span>Accuracy</span>
+
+        <strong id="adaptiveAccuracy">
+            0%
+        </strong>
+
+    </div>
+
+    <div class="adaptive-stat-row">
+
+        <span>Mastery</span>
+
+        <strong id="adaptiveMastery">
+            Needs more practice
+        </strong>
+
+    </div>
+
+</div>
+ {
+            margin-top: 18px;
+            padding: 17px;
+            border-radius: 15px;
+            background: linear-gradient(
+                135deg,
+                rgba(15, 42, 70, 0.9),
+                rgba(9, 19, 34, 0.9)
+            );
+            border: 1px solid rgba(104, 181, 255, 0.25);
+        }
+
+        .saved-progress-card h3 {
+            margin: 0 0 12px;
+            color: #6fc5ff;
+            font-size: 1rem;
+        }
+
+        .saved-progress-card p {
+            margin: 8px 0;
+            color: #c5d5e6;
+            font-size: 0.9rem;
+        }
+
+        .saved-progress-card strong {
+            color: #ffd166;
+            font-size: 1.2rem;
+        }
+
+        .chat {
+            min-height: 280px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .message {
+            max-width: 92%;
+            margin: 12px 0;
+            padding: 14px 16px;
+            border-radius: 15px;
+            line-height: 1.6;
+            white-space: pre-line;
+            font-size: 0.95rem;
+        }
+
+        .message.tutor {
+            margin-right: auto;
+            background: #132c46;
+            border: 1px solid #254b6d;
+            color: #e1efff;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.student {
+            margin-left: auto;
+            background: #174e69;
+            border: 1px solid #287b9d;
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .answer-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .answer-area input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 13px 16px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .primary-button {
+            background: #55b7ff;
+            color: #06111f;
+        }
+
+        .secondary-button {
+            background: #203c57;
+            color: #dceeff;
+            border: 1px solid #315a7b;
+        }
+
+        .warning-button {
+            background: #554323;
+            color: #ffe2a0;
+            border: 1px solid #8b6b31;
+        }
+
+        .danger-button {
+            background: #542d3a;
+            color: #ffd5df;
+            border: 1px solid #864355;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .completion-panel {
+            display: none;
+            margin-top: 20px;
+            padding: 22px;
+            border-radius: 18px;
+            text-align: center;
+            background: linear-gradient(
+                135deg,
+                rgba(23, 93, 76, 0.9),
+                rgba(10, 45, 47, 0.9)
+            );
+            border: 1px solid #3c9c7c;
+        }
+
+        .completion-panel.show {
+            display: block;
+        }
+
+        .completion-panel h2 {
+            margin-top: 0;
+            color: #8bffc8;
+        }
+
+        .completion-panel p {
+            color: #d3f8e6;
+            line-height: 1.6;
+        }
+
+        .footer-note {
+            margin-top: 25px;
+            text-align: center;
+            color: #758ca3;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: min(100% - 20px, 900px);
+                padding-top: 18px;
+            }
+
+            .card {
+                padding: 15px;
+                border-radius: 16px;
+            }
+
+            .answer-area {
+                flex-direction: column;
+            }
+
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .message {
+                max-width: 100%;
+            }
+
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <header>
+
+            <div class="brand">
+                SYNAPSE<span>.</span>
+            </div>
+
+            <div class="status">
+                ● LOCAL TUTOR
+            </div>
+
+        </header>
+
+        <section class="hero">
+
+            <h1>
+                Learn through
+                <span>discovery.</span>
+            </h1>
+
+            <p>
+                Your Socratic learning companion guides
+                you through questions, hints, and
+                step-by-step reasoning.
+            </p>
+
+        </section>
+
+        <section class="card">
+
+            <label for="conceptSelector">
+                Choose a learning concept
+            </label>
+
+            <select id="conceptSelector">
+
+                <option value="linear">
+                    Linear Equations
+                </option>
+
+                <option value="arithmetic">
+                    Arithmetic
+                </option>
+
+                <option value="fractions">
+                    Fractions
+                </option>
+
+                <option value="negative">
+                    Negative Numbers
+                </option>
+
+                <option value="algebra">
+                    Algebraic Expressions
+                </option>
+
+            </select>
+
+        </section>
+
+        <section class="card">
+
+            <div class="progress-header">
+
+                <span>Lesson progress</span>
+
+                <span id="progressText">
+                    Step 1 of 3
+                </span>
+
+            </div>
+
+            <div class="progress-track">
+
+                <div
+                    class="progress-bar"
+                    id="progressBar">
+                </div>
+
+            </div>
+
+            <div
+                class="saved-progress-card">
+
+                <h3>
+                    📚 Your Learning Progress
+                </h3>
+
+                <p>
+                    Completed lessons:
+                    <strong
+                        id="savedLessonCount">
+                        0
+                    </strong>
+                </p>
+
+                <p id="lastCompletedLesson">
+                    No lessons completed yet.
+                </p>
+
+            </div>
+
+        </section>
+
+        <section class="card">
+
+            <div
+                class="chat"
+                id="chatMessages">
+            </div>
+
+            <div class="answer-area">
+
+                <input
+                    type="text"
+                    id="answerInput"
+                    placeholder="Type your answer..."
+                    autocomplete="off">
+
+                <button
+                    class="primary-button"
+                    id="sendButton">
+                    Send
+                </button>
+
+            </div>
+
+            <div class="button-grid">
+
+                <button
+                    class="warning-button"
+                    id="hintButton">
+                    💡 Get Hint
+                </button>
+
+                <button
+                    class="secondary-button"
+                    id="explainButton">
+                    📖 Explain
+                </button>
+
+                <button
+                    class="danger-button"
+                    id="resetButton">
+                    ↻ Restart
+                </button>
+
+            </div>
+
+        </section>
+
+        <section
+            class="completion-panel"
+            id="completionPanel">
+
+            <h2>
+                🎉 Lesson Complete!
+            </h2>
+
+            <p id="completionText">
+                Excellent work!
+                Your progress has been saved.
+            </p>
+
+            <button
+                class="primary-button"
+                id="completionRestart">
+                Start Again
+            </button>
+
+        </section>
+
+        <p class="footer-note">
+            SYNAPSE is currently a local,
+            rule-based Socratic tutor prototype.
+            Your learning progress is stored
+            on this browser.
+        </p>
+
+    </main>
+
+    <script>
+
+/* =========================================
+   DISPLAY ADAPTIVE STATISTICS
+========================================= */
+
+function displayAdaptiveFeedback() {
+
+    const data =
+        getAdaptiveData();
+
+    const totalAnswersElement =
+        document.getElementById(
+            "adaptiveTotalAnswers"
+        );
+
+    const correctAnswersElement =
+        document.getElementById(
+            "adaptiveCorrectAnswers"
+        );
+
+    const accuracyElement =
+        document.getElementById(
+            "adaptiveAccuracy"
+        );
+
+    const masteryElement =
+        document.getElementById(
+            "adaptiveMastery"
+        );
+
+
+    if (totalAnswersElement) {
+
+        totalAnswersElement.textContent =
+            data.totalAnswers;
+
+    }
+
+
+    if (correctAnswersElement) {
+
+        correctAnswersElement.textContent =
+            data.correctAnswers;
+
+    }
+
+
+    if (accuracyElement) {
+
+        accuracyElement.textContent =
+            calculateAccuracy() + "%";
+
+    }
+
+
+    if (masteryElement) {
+
+        masteryElement.textContent =
+            getMasteryMessage();
+
+    }
+
+}
+
+        /* =====================================
+           SYNAPSE PROGRESS STORAGE
+        ===================================== */
+
+        const SYNAPSE_PROGRESS_KEY =
+            "synapse_learning_progress";
+
+/* =========================================
+   SYNAPSE ADAPTIVE LEARNING STORAGE
+========================================= */
+
+const SYNAPSE_ADAPTIVE_KEY =
+    "synapse_adaptive_learning";
+
+
+function getAdaptiveData() {
+
+    const savedData =
+        localStorage.getItem(
+            SYNAPSE_ADAPTIVE_KEY
+        );
+
+    if (!savedData) {
+
+        return {
+            totalAnswers: 0,
+            correctAnswers: 0,
+            incorrectAnswers: 0,
+            hintsUsed: 0,
+            concepts: {}
+        };
+
+    }
+
+    try {
+
+        return JSON.parse(savedData);
+
+    } catch (error) {
+
+        console.error(
+            "Adaptive data error:",
+            error
+        );
+
+        return {
+            totalAnswers: 0,
+            correctAnswers: 0,
+            incorrectAnswers: 0,
+            hintsUsed: 0,
+            concepts: {}
+        };
+
+    }
+
+}
+
+
+function saveAdaptiveData(data) {
+
+    localStorage.setItem(
+        SYNAPSE_ADAPTIVE_KEY,
+        JSON.stringify(data)
+    );
+
+}
+
+
+function recordAnswerResult(
+    concept,
+    isCorrect
+) {
+
+    const data =
+        getAdaptiveData();
+
+    data.totalAnswers++;
+
+    if (isCorrect) {
+
+        data.correctAnswers++;
+
+    } else {
+
+        data.incorrectAnswers++;
+
+    }
+
+
+    if (!data.concepts[concept]) {
+
+        data.concepts[concept] = {
+            attempts: 0,
+            correct: 0,
+            incorrect: 0,
+            hints: 0
+        };
+
+    }
+
+
+    data.concepts[concept].attempts++;
+
+
+    if (isCorrect) {
+
+        data.concepts[concept].correct++;
+
+    } else {
+
+        data.concepts[concept].incorrect++;
+
+    }
+
+
+    saveAdaptiveData(data);
+
+    return data;
+
+}
+
+
+function recordHintUsage(concept) {
+
+    const data =
+        getAdaptiveData();
+
+    data.hintsUsed++;
+
+
+    if (!data.concepts[concept]) {
+
+        data.concepts[concept] = {
+            attempts: 0,
+            correct: 0,
+            incorrect: 0,
+            hints: 0
+        };
+
+    }
+
+
+    data.concepts[concept].hints++;
+
+    saveAdaptiveData(data);
+
+}
+
+
+function calculateAccuracy() {
+
+    const data =
+        getAdaptiveData();
+
+    if (data.totalAnswers === 0) {
+
+        return 0;
+
+    }
+
+    return Math.round(
+        (
+            data.correctAnswers /
+            data.totalAnswers
+        ) * 100
+    );
+
+}
+
+
+function getMasteryMessage() {
+
+    const accuracy =
+        calculateAccuracy();
+
+    if (accuracy >= 80) {
+
+        return "Strong understanding";
+
+    }
+
+    if (accuracy >= 50) {
+
+        return "Developing understanding";
+
+    }
+
+    return "Needs more practice";
+
+}
+
+
+        function getSynapseProgress() {
+
+            const savedProgress =
+                localStorage.getItem(
+                    SYNAPSE_PROGRESS_KEY
+                );
+
+            if (!savedProgress) {
+
+                return {
+                    completedLessons: [],
+                    totalCompleted: 0,
+                    lastConcept: null,
+                    lastCompletedAt: null
+                };
+
+            }
+
+            try {
+
+                return JSON.parse(
+                    savedProgress
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to read saved progress:",
+                    error
+                );
+
+                return {
+                    completedLessons: [],
+                    totalCompleted: 0,
+                    lastConcept: null,
+                    lastCompletedAt: null
+                };
+
+            }
+
+        }
+
+
+        function saveSynapseProgress(progress) {
+
+            localStorage.setItem(
+                SYNAPSE_PROGRESS_KEY,
+                JSON.stringify(progress)
+            );
+
+        }
+
+
+        function saveCompletedLesson(concept) {
+
+            const progress =
+                getSynapseProgress();
+
+            if (
+                !progress.completedLessons.includes(
+                    concept
+                )
+            ) {
+
+                progress.completedLessons.push(
+                    concept
+                );
+
+            }
+
+            progress.totalCompleted =
+                progress.completedLessons.length;
+
+            progress.lastConcept =
+                concept;
+
+            progress.lastCompletedAt =
+                new Date().toISOString();
+
+            saveSynapseProgress(
+                progress
+            );
+
+            return progress;
+
+        }
+
+
+        function displaySavedProgress() {
+
+            const progress =
+                getSynapseProgress();
+
+            const countElement =
+                document.getElementById(
+                    "savedLessonCount"
+                );
+
+            const lastLessonElement =
+                document.getElementById(
+                    "lastCompletedLesson"
+                );
+
+            if (countElement) {
+
+                countElement.textContent =
+                    progress.totalCompleted;
+
+            }
+
+            if (lastLessonElement) {
+
+                if (progress.lastConcept) {
+
+                    lastLessonElement.textContent =
+                        "Last completed concept: " +
+                        getConceptName(
+                            progress.lastConcept
+                        );
+
+                } else {
+
+                    lastLessonElement.textContent =
+                        "No lessons completed yet.";
+
+                }
+
+            }
+
+        }
+
+
+        function getConceptName(concept) {
+
+            const names = {
+
+                linear: "Linear Equations",
+
+                arithmetic: "Arithmetic",
+
+                fractions: "Fractions",
+
+                negative: "Negative Numbers",
+
+                algebra: "Algebraic Expressions"
+
+            };
+
+            return names[concept] || concept;
+
+        }
+
+
+        /* =====================================
+           LESSON DATA
+        ===================================== */
+
+        const lessons = {
+
+            linear: {
+
+                title: "Linear Equations",
+
+                steps: [
+
+                    {
+                        question:
+                            "Let's solve 2x + 6 = 14. " +
+                            "What should we remove first?",
+
+                        hint:
+                            "Look at the number added to 2x.",
+
+                        explanation:
+                            "We first remove the constant " +
+                            "6 by subtracting 6 from both sides.",
+
+                        answers: [
+                            "6",
+                            "plus 6",
+                            "the 6"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "After subtracting 6 from both " +
+                            "sides, we get 2x = 8. " +
+                            "What should we do next?",
+
+                        hint:
+                            "x is multiplied by 2.",
+
+                        explanation:
+                            "Divide both sides by 2 " +
+                            "to isolate x.",
+
+                        answers: [
+                            "divide by 2",
+                            "division by 2",
+                            "2"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "What is the final value of x?",
+
+                        hint:
+                            "Calculate 8 divided by 2.",
+
+                        explanation:
+                            "Since 8 divided by 2 equals 4, " +
+                            "x = 4.",
+
+                        answers: [
+                            "4",
+                            "x=4",
+                            "x = 4"
+                        ]
+
+                    }
+
+                ]
+
+            },
+
+
+            arithmetic: {
+
+                title: "Arithmetic",
+
+                steps: [
+
+                    {
+                        question:
+                            "What is 7 + 5?",
+
+                        hint:
+                            "Count five numbers after 7.",
+
+                        explanation:
+                            "Adding 5 to 7 gives 12.",
+
+                        answers: [
+                            "12"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "What is 12 - 4?",
+
+                        hint:
+                            "Remove four from twelve.",
+
+                        explanation:
+                            "12 minus 4 equals 8.",
+
+                        answers: [
+                            "8"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "What is 3 × 4?",
+
+                        hint:
+                            "Add 3 four times.",
+
+                        explanation:
+                            "3 multiplied by 4 equals 12.",
+
+                        answers: [
+                            "12"
+                        ]
+
+                    }
+
+                ]
+
+            },
+
+
+            fractions: {
+
+                title: "Fractions",
+
+                steps: [
+
+                    {
+                        question:
+                            "In the fraction 3/5, " +
+                            "what is the numerator?",
+
+                        hint:
+                            "The numerator is the top number.",
+
+                        explanation:
+                            "The numerator is the number " +
+                            "above the fraction line.",
+
+                        answers: [
+                            "3",
+                            "three"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "In the fraction 3/5, " +
+                            "what is the denominator?",
+
+                        hint:
+                            "The denominator is the bottom number.",
+
+                        explanation:
+                            "The denominator is the number " +
+                            "below the fraction line.",
+
+                        answers: [
+                            "5",
+                            "five"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "What is 1/2 + 1/2?",
+
+                        hint:
+                            "Add the two equal halves.",
+
+                        explanation:
+                            "One half plus one half equals one whole.",
+
+                        answers: [
+                            "1",
+                            "one",
+                            "1 whole",
+                            "one whole"
+                        ]
+
+                    }
+
+                ]
+
+            },
+
+
+            negative: {
+
+                title: "Negative Numbers",
+
+                steps: [
+
+                    {
+                        question:
+                            "What is -3 + 5?",
+
+                        hint:
+                            "Move five steps to the right " +
+                            "from negative three.",
+
+                        explanation:
+                            "Adding 5 to -3 gives 2.",
+
+                        answers: [
+                            "2",
+                            "positive 2"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "What is -4 - 3?",
+
+                        hint:
+                            "Move three more steps left.",
+
+                        explanation:
+                            "Subtracting 3 from -4 gives -7.",
+
+                        answers: [
+                            "-7",
+                            "negative 7"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "What is -2 × 3?",
+
+                        hint:
+                            "A negative multiplied by a positive " +
+                            "produces a negative result.",
+
+                        explanation:
+                            "Negative 2 multiplied by 3 equals -6.",
+
+                        answers: [
+                            "-6",
+                            "negative 6"
+                        ]
+
+                    }
+
+                ]
+
+            },
+
+
+            algebra: {
+
+                title: "Algebraic Expressions",
+
+                steps: [
+
+                    {
+                        question:
+                            "In 3x + 5, what is the coefficient " +
+                            "of x?",
+
+                        hint:
+                            "The coefficient multiplies x.",
+
+                        explanation:
+                            "The coefficient of x is 3.",
+
+                        answers: [
+                            "3",
+                            "three"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "In 2x + 7, what is the constant?",
+
+                        hint:
+                            "The constant has no variable.",
+
+                        explanation:
+                            "The constant is 7.",
+
+                        answers: [
+                            "7",
+                            "seven"
+                        ]
+
+                    },
+
+                    {
+                        question:
+                            "Simplify x + x.",
+
+                        hint:
+                            "Combine the two like terms.",
+
+                        explanation:
+                            "x + x equals 2x.",
+
+                        answers: [
+                            "2x",
+                            "2 x",
+                            "two x"
+                        ]
+
+                    }
+
+                ]
+
+            }
+
+        };
+
+
+        /* =====================================
+           DOM ELEMENTS
+        ===================================== */
+
+        const conceptSelector =
+            document.getElementById(
+                "conceptSelector"
+            );
+
+        const chatMessages =
+            document.getElementById(
+                "chatMessages"
+            );
+
+        const answerInput =
+            document.getElementById(
+                "answerInput"
+            );
+
+        const sendButton =
+            document.getElementById(
+                "sendButton"
+            );
+
+        const hintButton =
+            document.getElementById(
+                "hintButton"
+            );
+
+        const explainButton =
+            document.getElementById(
+                "explainButton"
+            );
+
+        const resetButton =
+            document.getElementById(
+                "resetButton"
+            );
+
+        const progressText =
+            document.getElementById(
+                "progressText"
+            );
+
+        const progressBar =
+            document.getElementById(
+                "progressBar"
+            );
+
+        const completionPanel =
+            document.getElementById(
+                "completionPanel"
+            );
+
+        const completionText =
+            document.getElementById(
+                "completionText"
+            );
+
+        const completionRestart =
+            document.getElementById(
+                "completionRestart"
+            );
+
+
+        /* =====================================
+           SESSION STATE
+        ===================================== */
+
+        let selectedConcept =
+            conceptSelector.value;
+
+        let currentStepIndex = 0;
+
+        let sessionFinished = false;
+
+        let hintUsed = false;
+
+
+        /* =====================================
+           UTILITY FUNCTIONS
+        ===================================== */
+
+        function getCurrentLesson() {
+
+            return lessons[
+                selectedConcept
+            ];
+
+        }
+
+
+        function getCurrentStep() {
+
+            const lesson =
+                getCurrentLesson();
+
+            return lesson.steps[
+                currentStepIndex
+            ];
+
+        }
+
+
+        function addMessage(
+            sender,
+            message
+        ) {
+
+            const messageElement =
+                document.createElement(
+                    "div"
+                );
+
+            messageElement.className =
+                "message " + sender;
+
+            messageElement.textContent =
+                message;
+
+            chatMessages.appendChild(
+                messageElement
+            );
+
+            chatMessages.scrollTop =
+                chatMessages.scrollHeight;
+
+        }
+
+
+        function updateProgress() {
+
+            const lesson =
+                getCurrentLesson();
+
+            const totalSteps =
+                lesson.steps.length;
+
+            const currentStep =
+                Math.min(
+                    currentStepIndex + 1,
+                    totalSteps
+                );
+
+            const percentage =
+                sessionFinished
+                    ? 100
+                    : (
+                        currentStepIndex /
+                        totalSteps
+                    ) * 100;
+
+            progressText.textContent =
+                "Step " +
+                currentStep +
+                " of " +
+                totalSteps;
+
+            progressBar.style.width =
+                percentage + "%";
+
+        }
+
+
+        function normalizeAnswer(answer) {
+
+            return answer
+                .toLowerCase()
+                .trim()
+                .replace(/\s+/g, " ")
+                .replace(/[.,!?]/g, "");
+
+        }
+
+
+        function answerMatches(
+            answer,
+            expectedAnswers
+        ) {
+
+            const normalized =
+                normalizeAnswer(
+                    answer
+                );
+
+            return expectedAnswers.some(
+                function (expected) {
+
+                    return normalized ===
+                        normalizeAnswer(
+                            expected
+                        );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================
+           SESSION START
+        ===================================== */
+
+        function startSession() {
+
+            selectedConcept =
+                conceptSelector.value;
+
+            currentStepIndex = 0;
+
+            sessionFinished = false;
+
+            hintUsed = false;
+
+            completionPanel.classList.remove(
+                "show"
+            );
+
+            chatMessages.innerHTML = "";
+
+            answerInput.value = "";
+
+            answerInput.disabled = false;
+
+            sendButton.disabled = false;
+
+            hintButton.disabled = false;
+
+            explainButton.disabled = false;
+
+            updateProgress();
+
+            const lesson =
+                getCurrentLesson();
+
+            addMessage(
+                "tutor",
+                "Welcome to SYNAPSE!\n\n" +
+                "Today we are learning: " +
+                lesson.title +
+                "\n\n" +
+                getCurrentStep().question
+            );
+
+            answerInput.focus();
+
+        }
+
+
+        /* =====================================
+           ANSWER HANDLING
+        ===================================== */
+
+        function sendAnswer() {
+
+            if (sessionFinished) {
+
+                return;
+
+            }
+
+            const answer =
+                answerInput.value.trim();
+
+            if (!answer) {
+
+                return;
+
+            }
+
+            const step =
+                getCurrentStep();
+
+            addMessage(
+                "student",
+                answer
+            );
+
+            answerInput.value = "";
+
+            if (
+                answerMatches(
+                    answer,
+                    step.answers
+                )
+            ) {
+
+recordAnswerResult(
+    selectedConcept,
+    true
+);
+
+                addMessage(
+                    "tutor",
+                    "Great thinking! " +
+                    "Your answer matches the " +
+                    "expected idea."
+                );
+
+                currentStepIndex++;
+
+                hintUsed = false;
+
+                if (
+                    currentStepIndex >=
+                    getCurrentLesson().steps.length
+                ) {
+
+                    finishSession();
+
+                } else {
+
+recordAnswerResult(
+    selectedConcept,
+    false
+);
+
+                    updateProgress();
+
+                    addMessage(
+                        "tutor",
+                        "Let's continue.\n\n" +
+                        getCurrentStep().question
+                    );
+
+                }
+
+            } else {
+
+                addMessage(
+                    "tutor",
+                    "Good attempt. Let's think " +
+                    "about it step by step.\n\n" +
+                    "Your answer does not match " +
+                    "the expected idea yet. " +
+                    "Try again, or request a hint."
+                );
+
+            }
+
+        }
+
+
+        /* =====================================
+           HINT AND EXPLANATION
+        ===================================== */
+
+        function showHint() {
+
+            if (sessionFinished) {
+
+                return;
+
+            }
+
+            const step =
+                getCurrentStep();
+
+            addMessage(
+                "tutor",
+                "Hint: " + step.hint
+            );
+
+            hintUsed = true;
+
+recordHintUsage(
+    selectedConcept
+);
+
+        }
+
+
+        function explainConcept() {
+
+            if (sessionFinished) {
+
+                return;
+
+            }
+
+            const step =
+                getCurrentStep();
+
+            addMessage(
+                "tutor",
+                "Explanation: " +
+                step.explanation
+            );
+
+        }
+
+
+        /* =====================================
+           COMPLETE SESSION
+        ===================================== */
+
+        function finishSession() {
+
+            const selectedConcept =
+                conceptSelector.value;
+
+            saveCompletedLesson(
+                selectedConcept
+            );
+
+            displaySavedProgress();
+
+            sessionFinished = true;
+
+            updateProgress();
+
+            completionPanel.classList.add(
+                "show"
+            );
+
+            completionText.textContent =
+                "Excellent work! " +
+                "Your progress has been saved.";
+
+            addMessage(
+                "tutor",
+                "Session complete! " +
+                "You worked through the " +
+                "guided learning steps."
+            );
+
+            answerInput.disabled = true;
+
+            sendButton.disabled = true;
+
+            hintButton.disabled = true;
+
+            explainButton.disabled = true;
+
+        }
+
+
+        /* =====================================
+           RESET SESSION
+        ===================================== */
+
+        function resetSession() {
+
+            startSession();
+
+        }
+
+
+        /* =====================================
+           EVENT LISTENERS
+        ===================================== */
+
+        conceptSelector.addEventListener(
+            "change",
+            function () {
+
+                selectedConcept =
+                    conceptSelector.value;
+
+                startSession();
+
+            }
+        );
+
+
+        sendButton.addEventListener(
+            "click",
+            sendAnswer
+        );
+
+
+        answerInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    sendAnswer();
+
+                }
+
+            }
+        );
+
+
+        hintButton.addEventListener(
+            "click",
+            showHint
+        );
+
+
+        explainButton.addEventListener(
+            "click",
+            explainConcept
+        );
+
+
+        resetButton.addEventListener(
+            "click",
+            resetSession
+        );
+
+
+        completionRestart.addEventListener(
+            "click",
+            resetSession
+        );
+
+
+        /* =====================================
+           INITIALIZE APPLICATION
+        ===================================== */
+
+        displaySavedProgress();
+
+        startSession();
+
+    </script>
+
+</body>
+
+</html>

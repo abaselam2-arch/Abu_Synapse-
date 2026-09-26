@@ -1,0 +1,2022 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SYNAPSE | Quiz & Examination</title>
+
+  <style>
+    :root {
+      --bg: #080d18;
+      --card: #111a2b;
+      --card-light: #18263f;
+      --primary: #6c8cff;
+      --secondary: #936cff;
+      --text: #f4f7ff;
+      --muted: #9caaca;
+      --border: rgba(255, 255, 255, 0.1);
+      --success: #36d399;
+      --danger: #ff6b81;
+      --warning: #f5bb54;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at top right,
+          #24345e 0%,
+          transparent 38%
+        ),
+        linear-gradient(135deg, #080d18, #0c1425);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      padding-bottom: 45px;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 17px 6%;
+      background: rgba(8, 13, 24, 0.92);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 12px;
+    }
+
+    .container {
+      width: min(1050px, 92%);
+      margin: 32px auto;
+    }
+
+    .page-heading {
+      margin-bottom: 25px;
+    }
+
+    .page-heading h1 {
+      font-size: clamp(28px, 5vw, 43px);
+      margin-bottom: 10px;
+    }
+
+    .page-heading p {
+      max-width: 700px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .card {
+      background: linear-gradient(
+        145deg,
+        rgba(17, 26, 43, 0.98),
+        rgba(12, 20, 35, 0.98)
+      );
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+    }
+
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #dce5ff;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 13px;
+      background: #0a1221;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      outline: none;
+    }
+
+    select:focus,
+    input[type="number"]:focus {
+      border-color: var(--primary);
+    }
+
+    .mode-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mode-option {
+      position: relative;
+    }
+
+    .mode-option input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .mode-option label {
+      display: block;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.025);
+      cursor: pointer;
+      height: 100%;
+    }
+
+    .mode-option input:checked + label {
+      background: rgba(108, 140, 255, 0.15);
+      border-color: var(--primary);
+    }
+
+    .mode-option strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    .mode-option small {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 11px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .danger-button {
+      border-radius: 10px;
+      padding: 13px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .primary-button {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      flex: 1;
+    }
+
+    .secondary-button {
+      background: var(--card-light);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .danger-button {
+      background: rgba(255, 107, 129, 0.1);
+      color: var(--danger);
+      border-color: rgba(255, 107, 129, 0.25);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-label {
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .quiz-title {
+      font-size: 23px;
+      margin-top: 7px;
+    }
+
+    .timer {
+      min-width: 110px;
+      text-align: center;
+      padding: 12px;
+      background: rgba(108, 140, 255, 0.12);
+      border: 1px solid rgba(108, 140, 255, 0.25);
+      border-radius: 12px;
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .timer.warning {
+      color: var(--warning);
+      border-color: rgba(245, 187, 84, 0.4);
+    }
+
+    .timer.danger {
+      color: var(--danger);
+      border-color: rgba(255, 107, 129, 0.4);
+    }
+
+    .progress-area {
+      margin-bottom: 24px;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      height: 8px;
+      background: #26334b;
+      border-radius: 30px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.25s ease;
+    }
+
+    .question-number {
+      display: inline-block;
+      padding: 6px 10px;
+      background: rgba(108, 140, 255, 0.12);
+      border-radius: 20px;
+      color: var(--primary);
+      font-size: 11px;
+      margin-bottom: 15px;
+    }
+
+    .question-text {
+      font-size: 21px;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      padding: 16px;
+      text-align: left;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    .answer-option:hover {
+      background: rgba(108, 140, 255, 0.08);
+      border-color: rgba(108, 140, 255, 0.5);
+    }
+
+    .answer-option.selected {
+      background: rgba(108, 140, 255, 0.16);
+      border-color: var(--primary);
+    }
+
+    .answer-letter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #26334b;
+      color: #dce5ff;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .answer-option.selected .answer-letter {
+      background: var(--primary);
+      color: white;
+    }
+
+    .answer-content {
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .navigation button {
+      min-width: 120px;
+    }
+
+    .question-map {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .map-button {
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-light);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .map-button.current {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .map-button.answered {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .map-button.current.answered {
+      background: var(--primary);
+      color: white;
+    }
+
+    .result-card {
+      text-align: center;
+    }
+
+    .result-icon {
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: rgba(54, 211, 153, 0.12);
+      color: var(--success);
+      font-size: 40px;
+    }
+
+    .result-card h2 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .result-card p {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .result-score {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 20px 0 8px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 25px 0;
+    }
+
+    .result-stat {
+      padding: 16px 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+    }
+
+    .result-stat strong {
+      display: block;
+      font-size: 23px;
+      margin-bottom: 6px;
+    }
+
+    .result-stat span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .review {
+      margin-top: 25px;
+      text-align: left;
+    }
+
+    .review h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .review-item {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .review-item.correct {
+      border-left: 4px solid var(--success);
+    }
+
+    .review-item.incorrect {
+      border-left: 4px solid var(--danger);
+    }
+
+    .review-item h4 {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 9px;
+    }
+
+    .review-item p {
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .correct-text {
+      color: var(--success);
+    }
+
+    .incorrect-text {
+      color: var(--danger);
+    }
+
+    .neutral-text {
+      color: var(--muted);
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 35px;
+    }
+
+    @media (max-width: 700px) {
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 19px;
+      }
+
+      .question-text {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .navbar {
+        padding: 14px 4%;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .nav-link {
+        padding: 8px;
+        font-size: 10px;
+      }
+
+      .mode-options {
+        grid-template-columns: 1fr;
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .navigation button {
+        flex: 1;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo">SYNAP<span>SE</span></div>
+
+    <div class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="tutor.html">Tutor</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <section class="page-heading">
+      <h1>Quiz & Examination</h1>
+      <p>
+        Test your understanding, practice important concepts,
+        and review your learning performance.
+      </p>
+    </section>
+
+    <!-- SETUP SECTION -->
+    <section id="setupSection" class="card">
+
+      <h2 class="quiz-title">Configure Your Assessment</h2>
+
+      <p style="color: var(--muted); margin: 12px 0 25px; line-height: 1.6; font-size: 13px;">
+        Choose a subject, assessment mode, and number of questions
+        before starting.
+      </p>
+
+      <div class="setup-grid">
+
+        <div>
+          <div class="form-group">
+            <label for="conceptSelect">Learning Concept</label>
+
+            <select id="conceptSelect">
+              <option value="Linear Equations">Linear Equations</option>
+              <option value="Arithmetic">Arithmetic</option>
+              <option value="Fractions">Fractions</option>
+              <option value="Negative Numbers">Negative Numbers</option>
+              <option value="Algebraic Expressions">
+                Algebraic Expressions
+              </option>
+              <option value="Mixed Mathematics">
+                Mixed Mathematics
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="questionCount">Number of Questions</label>
+
+            <select id="questionCount">
+              <option value="5">5 Questions</option>
+              <option value="10" selected>10 Questions</option>
+              <option value="15">15 Questions</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div class="form-group">
+            <label>Assessment Mode</label>
+
+            <div class="mode-options">
+
+              <div class="mode-option">
+                <input
+                  type="radio"
+                  id="practiceMode"
+                  name="assessmentMode"
+                  value="practice"
+                  checked
+                >
+
+                <label for="practiceMode">
+                  <strong>Practice</strong>
+                  <small>
+                    No time limit. Learn at your own pace.
+                  </small>
+                </label>
+              </div>
+
+              <div class="mode-option">
+                <input
+                  type="radio"
+                  id="examMode"
+                  name="assessmentMode"
+                  value="exam"
+                >
+
+                <label for="examMode">
+                  <strong>Examination</strong>
+                  <small>
+                    Timed assessment with automatic submission.
+                  </small>
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="examMinutes">Examination Time</label>
+
+            <select id="examMinutes">
+              <option value="5">5 Minutes</option>
+              <option value="10" selected>10 Minutes</option>
+              <option value="15">15 Minutes</option>
+              <option value="20">20 Minutes</option>
+              <option value="30">30 Minutes</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="button-row">
+        <button
+          class="primary-button"
+          id="startButton"
+        >
+          Start Assessment
+        </button>
+      </div>
+
+    </section>
+
+    <!-- QUIZ SECTION -->
+    <section id="quizSection" class="card hidden">
+
+      <div class="quiz-header">
+
+        <div>
+          <div class="quiz-label" id="modeLabel">
+            Practice Mode
+          </div>
+
+          <h2 class="quiz-title" id="quizConceptTitle">
+            Linear Equations
+          </h2>
+        </div>
+
+        <div
+          class="timer hidden"
+          id="timer"
+        >
+          10:00
+        </div>
+
+      </div>
+
+      <div class="progress-area">
+
+        <div class="progress-text">
+          <span id="questionProgressText">
+            Question 1 of 10
+          </span>
+
+          <span id="answeredText">
+            Answered: 0
+          </span>
+        </div>
+
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            id="questionProgress"
+          ></div>
+        </div>
+
+      </div>
+
+      <div>
+        <span class="question-number" id="questionNumber">
+          Question 1
+        </span>
+
+        <h2 class="question-text" id="questionText">
+          Question text
+        </h2>
+
+        <div class="answers" id="answersContainer"></div>
+      </div>
+
+      <div class="navigation">
+
+        <button
+          class="secondary-button"
+          id="previousButton"
+        >
+          Previous
+        </button>
+
+        <button
+          class="secondary-button"
+          id="nextButton"
+        >
+          Next
+        </button>
+
+        <button
+          class="primary-button"
+          id="submitButton"
+        >
+          Submit Assessment
+        </button>
+
+      </div>
+
+      <div
+        class="question-map"
+        id="questionMap"
+      ></div>
+
+    </section>
+
+    <!-- RESULT SECTION -->
+    <section id="resultSection" class="card result-card hidden">
+
+      <div class="result-icon" id="resultIcon">
+        ✓
+      </div>
+
+      <h2 id="resultTitle">
+        Assessment Complete
+      </h2>
+
+      <p id="resultMessage">
+        Review your performance below.
+      </p>
+
+      <div class="result-score" id="resultPercentage">
+        0%
+      </div>
+
+      <p id="resultMode">
+        Practice Mode
+      </p>
+
+      <div class="result-grid">
+
+        <div class="result-stat">
+          <strong id="correctResult" class="correct-text">
+            0
+          </strong>
+
+          <span>Correct</span>
+        </div>
+
+        <div class="result-stat">
+          <strong id="incorrectResult" class="incorrect-text">
+            0
+          </strong>
+
+          <span>Incorrect</span>
+        </div>
+
+        <div class="result-stat">
+          <strong id="unansweredResult">
+            0
+          </strong>
+
+          <span>Unanswered</span>
+        </div>
+
+      </div>
+
+      <div class="review">
+        <h3>Question Review</h3>
+
+        <div id="reviewContainer"></div>
+      </div>
+
+      <div class="button-row">
+
+        <button
+          class="primary-button"
+          id="retryButton"
+        >
+          Try Again
+        </button>
+
+        <button
+          class="secondary-button"
+          id="newAssessmentButton"
+        >
+          New Assessment
+        </button>
+
+        <button
+          class="secondary-button"
+          id="dashboardButton"
+        >
+          Dashboard
+        </button>
+
+      </div>
+
+    </section>
+
+    <div class="footer">
+      SYNAPSE — Adaptive Learning Infrastructure
+    </div>
+
+  </main>
+
+  <script>
+    /*
+      SYNAPSE QUIZ ENGINE
+
+      Local prototype:
+      - Questions are stored in this file.
+      - Results are saved in localStorage.
+      - No backend or external AI service is required.
+    */
+
+    const ADAPTIVE_KEY = "synapse_adaptive_learning";
+    const QUIZ_HISTORY_KEY = "synapse_quiz_history";
+
+    const questionBank = {
+
+      "Linear Equations": [
+        {
+          question: "Solve: x + 5 = 12",
+          options: ["5", "7", "12", "17"],
+          answer: 1,
+          explanation: "Subtract 5 from both sides. x = 12 - 5 = 7."
+        },
+        {
+          question: "Solve: 2x = 14",
+          options: ["6", "7", "12", "28"],
+          answer: 1,
+          explanation: "Divide both sides by 2. x = 14 / 2 = 7."
+        },
+        {
+          question: "Solve: x - 8 = 4",
+          options: ["4", "8", "12", "-4"],
+          answer: 2,
+          explanation: "Add 8 to both sides. x = 4 + 8 = 12."
+        },
+        {
+          question: "Solve: 3x + 2 = 11",
+          options: ["2", "3", "4", "5"],
+          answer: 1,
+          explanation: "Subtract 2, giving 3x = 9. Divide by 3. x = 3."
+        },
+        {
+          question: "Solve: 5x = 45",
+          options: ["8", "9", "10", "15"],
+          answer: 1,
+          explanation: "Divide 45 by 5. Therefore x = 9."
+        },
+        {
+          question: "Solve: 2x + 6 = 16",
+          options: ["4", "5", "6", "11"],
+          answer: 1,
+          explanation: "Subtract 6: 2x = 10. Divide by 2: x = 5."
+        },
+        {
+          question: "Solve: 4x - 4 = 20",
+          options: ["4", "5", "6", "8"],
+          answer: 2,
+          explanation: "Add 4: 4x = 24. Divide by 4: x = 6."
+        },
+        {
+          question: "Solve: x / 3 = 6",
+          options: ["2", "9", "18", "24"],
+          answer: 2,
+          explanation: "Multiply both sides by 3. x = 18."
+        },
+        {
+          question: "Solve: 7 + x = 20",
+          options: ["11", "12", "13", "14"],
+          answer: 2,
+          explanation: "Subtract 7 from 20. x = 13."
+        },
+        {
+          question: "Solve: 3x - 9 = 0",
+          options: ["-3", "0", "3", "9"],
+          answer: 2,
+          explanation: "Add 9: 3x = 9. Divide by 3: x = 3."
+        },
+        {
+          question: "Solve: 6x + 4 = 22",
+          options: ["2", "3", "4", "5"],
+          answer: 1,
+          explanation: "Subtract 4: 6x = 18. Divide by 6: x = 3."
+        },
+        {
+          question: "Solve: 2(x + 3) = 14",
+          options: ["3", "4", "5", "7"],
+          answer: 1,
+          explanation: "Divide by 2: x + 3 = 7. Subtract 3: x = 4."
+        },
+        {
+          question: "If x = 5, what is 2x + 3?",
+          options: ["10", "11", "13", "15"],
+          answer: 2,
+          explanation: "Substitute 5: 2(5) + 3 = 10 + 3 = 13."
+        },
+        {
+          question: "Solve: 10 - x = 4",
+          options: ["4", "5", "6", "14"],
+          answer: 2,
+          explanation: "Subtract 10 from both sides: -x = -6. Therefore x = 6."
+        },
+        {
+          question: "Which equation has x = 4 as its solution?",
+          options: ["x + 2 = 5", "2x = 8", "x - 4 = 4", "x + 4 = 2"],
+          answer: 1,
+          explanation: "For 2x = 8, divide by 2 to get x = 4."
+        }
+      ],
+
+      "Arithmetic": [
+        {
+          question: "What is 8 + 7?",
+          options: ["14", "15", "16", "17"],
+          answer: 1,
+          explanation: "8 + 7 = 15."
+        },
+        {
+          question: "What is 12 × 3?",
+          options: ["24", "30", "36", "42"],
+          answer: 2,
+          explanation: "12 multiplied by 3 equals 36."
+        },
+        {
+          question: "What is 45 ÷ 5?",
+          options: ["7", "8", "9", "10"],
+          answer: 2,
+          explanation: "5 multiplied by 9 equals 45."
+        },
+        {
+          question: "What is 20 - 13?",
+          options: ["5", "6", "7", "8"],
+          answer: 2,
+          explanation: "20 - 13 = 7."
+        },
+        {
+          question: "What is 6²?",
+          options: ["12", "18", "36", "64"],
+          answer: 2,
+          explanation: "6² means 6 × 6 = 36."
+        },
+        {
+          question: "What is 100 ÷ 10?",
+          options: ["1", "5", "10", "100"],
+          answer: 2,
+          explanation: "100 divided by 10 equals 10."
+        },
+        {
+          question: "What is 9 × 9?",
+          options: ["72", "81", "90", "99"],
+          answer: 1,
+          explanation: "9 multiplied by 9 equals 81."
+        },
+        {
+          question: "What is 50 + 25?",
+          options: ["65", "70", "75", "85"],
+          answer: 2,
+          explanation: "50 + 25 = 75."
+        },
+        {
+          question: "What is 7 × 4 - 5?",
+          options: ["18", "23", "28", "33"],
+          answer: 1,
+          explanation: "7 × 4 = 28. Then 28 - 5 = 23."
+        },
+        {
+          question: "What is 3 + 4 × 2?",
+          options: ["14", "11", "10", "8"],
+          answer: 1,
+          explanation: "Multiplication comes first: 4 × 2 = 8. Then 3 + 8 = 11."
+        },
+        {
+          question: "What is 15% of 100?",
+          options: ["10", "15", "20", "25"],
+          answer: 1,
+          explanation: "15% of 100 is 15."
+        },
+        {
+          question: "What is 2³?",
+          options: ["6", "8", "9", "12"],
+          answer: 1,
+          explanation: "2³ = 2 × 2 × 2 = 8."
+        },
+        {
+          question: "What is 144 ÷ 12?",
+          options: ["10", "11", "12", "14"],
+          answer: 2,
+          explanation: "12 × 12 = 144, so the answer is 12."
+        },
+        {
+          question: "What is 25 + 36?",
+          options: ["51", "61", "71", "81"],
+          answer: 1,
+          explanation: "25 + 36 = 61."
+        },
+        {
+          question: "What is 90 - 47?",
+          options: ["33", "43", "47", "53"],
+          answer: 1,
+          explanation: "90 - 47 = 43."
+        }
+      ],
+
+      "Fractions": [
+        {
+          question: "What is 1/2 + 1/2?",
+          options: ["1/2", "1", "2", "1/4"],
+          answer: 1,
+          explanation: "Two halves make one whole."
+        },
+        {
+          question: "What is 1/4 + 1/4?",
+          options: ["1/8", "1/2", "3/4", "1"],
+          answer: 1,
+          explanation: "1/4 + 1/4 = 2/4 = 1/2."
+        },
+        {
+          question: "What is 3/4 - 1/4?",
+          options: ["1/4", "1/2", "3/4", "1"],
+          answer: 1,
+          explanation: "3/4 - 1/4 = 2/4 = 1/2."
+        },
+        {
+          question: "What is 2/3 + 1/3?",
+          options: ["1/3", "2/3", "1", "3/6"],
+          answer: 2,
+          explanation: "2/3 + 1/3 = 3/3 = 1."
+        },
+        {
+          question: "Which fraction is equivalent to 1/2?",
+          options: ["2/3", "2/4", "3/5", "4/6"],
+          answer: 1,
+          explanation: "Multiplying the numerator and denominator by 2 gives 2/4."
+        },
+        {
+          question: "What is 1/2 × 1/3?",
+          options: ["1/5", "1/6", "2/3", "3/2"],
+          answer: 1,
+          explanation: "Multiply numerators and denominators: 1/2 × 1/3 = 1/6."
+        },
+        {
+          question: "What is 3/4 × 2?",
+          options: ["3/8", "1", "3/2", "2"],
+          answer: 2,
+          explanation: "3/4 × 2 = 6/4 = 3/2."
+        },
+        {
+          question: "Which fraction is the largest?",
+          options: ["1/4", "1/2", "3/4", "1/8"],
+          answer: 2,
+          explanation: "3/4 is greater than 1/2, 1/4, and 1/8."
+        },
+        {
+          question: "What is 2/5 + 2/5?",
+          options: ["2/5", "4/5", "4/10", "1/5"],
+          answer: 1,
+          explanation: "2/5 + 2/5 = 4/5."
+        },
+        {
+          question: "What is 4/8 in simplest form?",
+          options: ["1/2", "1/4", "2/3", "4/4"],
+          answer: 0,
+          explanation: "Divide numerator and denominator by 4: 4/8 = 1/2."
+        },
+        {
+          question: "What is 5/6 - 2/6?",
+          options: ["1/2", "2/6", "3/6", "7/6"],
+          answer: 2,
+          explanation: "5/6 - 2/6 = 3/6 = 1/2."
+        },
+        {
+          question: "What is 1/5 of 20?",
+          options: ["2", "4", "5", "10"],
+          answer: 1,
+          explanation: "20 divided by 5 equals 4."
+        },
+        {
+          question: "What is 3/5 as a decimal?",
+          options: ["0.3", "0.5", "0.6", "0.8"],
+          answer: 2,
+          explanation: "3 divided by 5 equals 0.6."
+        },
+        {
+          question: "Which fraction equals one whole?",
+          options: ["2/3", "3/3", "1/3", "4/5"],
+          answer: 1,
+          explanation: "A fraction with equal numerator and denominator equals one."
+        },
+        {
+          question: "What is 2/7 + 3/7?",
+          options: ["5/7", "5/14", "6/7", "1/7"],
+          answer: 0,
+          explanation: "Add the numerators while keeping the denominator: 5/7."
+        }
+      ],
+
+      "Negative Numbers": [
+        {
+          question: "What is -5 + 3?",
+          options: ["-8", "-2", "2", "8"],
+          answer: 1,
+          explanation: "Moving 3 units toward zero from -5 gives -2."
+        },
+        {
+          question: "What is -4 - 3?",
+          options: ["-1", "-7", "7", "1"],
+          answer: 1,
+          explanation: "Subtracting 3 from -4 gives -7."
+        },
+        {
+          question: "What is -6 × 2?",
+          options: ["-12", "-8", "8", "12"],
+          answer: 0,
+          explanation: "A negative multiplied by a positive is negative: -12."
+        },
+        {
+          question: "What is -20 ÷ 5?",
+          options: ["-4", "4", "-5", "5"],
+          answer: 0,
+          explanation: "A negative divided by a positive is negative: -4."
+        },
+        {
+          question: "What is -8 + 8?",
+          options: ["-16", "0", "8", "16"],
+          answer: 1,
+          explanation: "Opposite numbers add to zero."
+        },
+        {
+          question: "Which number is smaller?",
+          options: ["-2", "-8", "0", "3"],
+          answer: 1,
+          explanation: "-8 is farther left on the number line."
+        },
+        {
+          question: "What is -3 × -4?",
+          options: ["-12", "-7", "7", "12"],
+          answer: 3,
+          explanation: "A negative multiplied by a negative is positive: 12."
+        },
+        {
+          question: "What is 7 + (-10)?",
+          options: ["17", "-17", "-3", "3"],
+          answer: 2,
+          explanation: "7 - 10 = -3."
+        },
+        {
+          question: "What is -15 - (-5)?",
+          options: ["-20", "-10", "10", "20"],
+          answer: 1,
+          explanation: "Subtracting a negative is addition: -15 + 5 = -10."
+        },
+        {
+          question: "What is the absolute value of -9?",
+          options: ["-9", "0", "9", "18"],
+          answer: 2,
+          explanation: "Absolute value is the distance from zero: 9."
+        },
+        {
+          question: "What is -2 + (-6)?",
+          options: ["-8", "-4", "4", "8"],
+          answer: 0,
+          explanation: "Add the magnitudes and keep the negative sign: -8."
+        },
+        {
+          question: "What is 5 - 12?",
+          options: ["7", "-7", "17", "-17"],
+          answer: 1,
+          explanation: "5 - 12 = -7."
+        },
+        {
+          question: "What is -24 ÷ -6?",
+          options: ["-4", "4", "-18", "18"],
+          answer: 1,
+          explanation: "A negative divided by a negative is positive: 4."
+        },
+        {
+          question: "Which number is greater?",
+          options: ["-10", "-5", "-15", "-20"],
+          answer: 1,
+          explanation: "-5 is closest to zero and is therefore greatest."
+        },
+        {
+          question: "What is 0 - (-7)?",
+          options: ["-7", "0", "7", "14"],
+          answer: 2,
+          explanation: "Subtracting a negative gives positive 7."
+        }
+      ],
+
+      "Algebraic Expressions": [
+        {
+          question: "Simplify: 3x + 2x",
+          options: ["5x", "6x", "5x²", "x"],
+          answer: 0,
+          explanation: "Add the coefficients of like terms: 3x + 2x = 5x."
+        },
+        {
+          question: "What is the coefficient of x in 7x + 3?",
+          options: ["3", "7", "x", "10"],
+          answer: 1,
+          explanation: "The number multiplying x is 7."
+        },
+        {
+          question: "Simplify: 8a - 3a",
+          options: ["5a", "11a", "5", "24a"],
+          answer: 0,
+          explanation: "8a - 3a = 5a."
+        },
+        {
+          question: "Evaluate 2x + 1 when x = 4.",
+          options: ["7", "8", "9", "10"],
+          answer: 2,
+          explanation: "2(4) + 1 = 9."
+        },
+        {
+          question: "Simplify: x + x + x",
+          options: ["x³", "3x", "3", "x"],
+          answer: 1,
+          explanation: "Three x terms equal 3x."
+        },
+        {
+          question: "Which terms are like terms?",
+          options: ["3x and 4x", "2x and 2y", "x and x²", "3 and 3x"],
+          answer: 0,
+          explanation: "Like terms have the same variable and exponent."
+        },
+        {
+          question: "Expand: 2(x + 3)",
+          options: ["2x + 3", "2x + 6", "x + 6", "2x + 5"],
+          answer: 1,
+          explanation: "Multiply 2 by each term: 2x + 6."
+        },
+        {
+          question: "Simplify: 4y + 3 - y",
+          options: ["3y + 3", "5y + 3", "4y + 2", "3y"],
+          answer: 0,
+          explanation: "4y - y = 3y, so the result is 3y + 3."
+        },
+        {
+          question: "What is the constant in 5x + 9?",
+          options: ["5", "x", "9", "14"],
+          answer: 2,
+          explanation: "The constant is the term without a variable: 9."
+        },
+        {
+          question: "Simplify: 2a + 3b + 4a",
+          options: ["6a + 3b", "9ab", "6a + 7b", "5a + 3b"],
+          answer: 0,
+          explanation: "2a + 4a = 6a, leaving 3b."
+        },
+        {
+          question: "Evaluate x² when x = 3.",
+          options: ["6", "9", "12", "27"],
+          answer: 1,
+          explanation: "3² = 3 × 3 = 9."
+        },
+        {
+          question: "Expand: 3(x - 2)",
+          options: ["3x - 2", "3x - 6", "x - 6", "3x + 6"],
+          answer: 1,
+          explanation: "Multiply 3 by x and -2: 3x - 6."
+        },
+        {
+          question: "Simplify: 10x - 4x + 2",
+          options: ["6x + 2", "14x + 2", "6x - 2", "10x + 2"],
+          answer: 0,
+          explanation: "10x - 4x = 6x, so the result is 6x + 2."
+        },
+        {
+          question: "If a = 2 and b = 3, what is a + b?",
+          options: ["1", "5", "6", "23"],
+          answer: 1,
+          explanation: "Substitute the values: 2 + 3 = 5."
+        },
+        {
+          question: "Which expression represents a number increased by 4?",
+          options: ["x - 4", "4x", "x + 4", "x / 4"],
+          answer: 2,
+          explanation: "Increasing x by 4 gives x + 4."
+        }
+      ]
+
+    };
+
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let selectedAnswers = [];
+    let assessmentMode = "practice";
+    let currentConcept = "";
+    let totalSeconds = 0;
+    let timerInterval = null;
+    let assessmentStarted = false;
+    let assessmentFinished = false;
+
+    const setupSection = document.getElementById("setupSection");
+    const quizSection = document.getElementById("quizSection");
+    const resultSection = document.getElementById("resultSection");
+
+    const conceptSelect = document.getElementById("conceptSelect");
+    const questionCount = document.getElementById("questionCount");
+    const examMinutes = document.getElementById("examMinutes");
+
+    const startButton = document.getElementById("startButton");
+
+    const modeLabel = document.getElementById("modeLabel");
+    const quizConceptTitle = document.getElementById("quizConceptTitle");
+    const timer = document.getElementById("timer");
+
+    const questionProgressText = document.getElementById("questionProgressText");
+    const answeredText = document.getElementById("answeredText");
+    const questionProgress = document.getElementById("questionProgress");
+
+    const questionNumber = document.getElementById("questionNumber");
+    const questionText = document.getElementById("questionText");
+    const answersContainer = document.getElementById("answersContainer");
+
+    const previousButton = document.getElementById("previousButton");
+    const nextButton = document.getElementById("nextButton");
+    const submitButton = document.getElementById("submitButton");
+    const questionMap = document.getElementById("questionMap");
+
+    const resultIcon = document.getElementById("resultIcon");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultMessage = document.getElementById("resultMessage");
+    const resultPercentage = document.getElementById("resultPercentage");
+    const resultMode = document.getElementById("resultMode");
+
+    const correctResult = document.getElementById("correctResult");
+    const incorrectResult = document.getElementById("incorrectResult");
+    const unansweredResult = document.getElementById("unansweredResult");
+    const reviewContainer = document.getElementById("reviewContainer");
+
+    const retryButton = document.getElementById("retryButton");
+    const newAssessmentButton = document.getElementById("newAssessmentButton");
+    const dashboardButton = document.getElementById("dashboardButton");
+
+    function shuffleArray(array) {
+      const copy = [...array];
+
+      for (let i = copy.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+
+        [copy[i], copy[randomIndex]] = [
+          copy[randomIndex],
+          copy[i]
+        ];
+      }
+
+      return copy;
+    }
+
+    function getSelectedMode() {
+      const selected = document.querySelector(
+        'input[name="assessmentMode"]:checked'
+      );
+
+      return selected ? selected.value : "practice";
+    }
+
+    function getQuestionPool(concept) {
+      if (concept === "Mixed Mathematics") {
+        return Object.values(questionBank).flat();
+      }
+
+      return questionBank[concept] || [];
+    }
+
+    function prepareQuestions() {
+      const pool = getQuestionPool(currentConcept);
+
+      const shuffled = shuffleArray(pool);
+
+      const count = Math.min(
+        Number(questionCount.value),
+        shuffled.length
+      );
+
+      currentQuestions = shuffled.slice(0, count);
+
+      selectedAnswers = new Array(currentQuestions.length).fill(null);
+    }
+
+    function startAssessment() {
+      currentConcept = conceptSelect.value;
+      assessmentMode = getSelectedMode();
+
+      prepareQuestions();
+
+      if (currentQuestions.length === 0) {
+        alert("No questions are available for this concept.");
+        return;
+      }
+
+      currentQuestionIndex = 0;
+      assessmentStarted = true;
+      assessmentFinished = false;
+
+      setupSection.classList.add("hidden");
+      resultSection.classList.add("hidden");
+      quizSection.classList.remove("hidden");
+
+      quizConceptTitle.textContent = currentConcept;
+
+      modeLabel.textContent =
+        assessmentMode === "exam"
+          ? "Examination Mode"
+          : "Practice Mode";
+
+      if (assessmentMode === "exam") {
+        totalSeconds = Number(examMinutes.value) * 60;
+
+        timer.classList.remove("hidden");
+        updateTimerDisplay();
+
+        clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+          totalSeconds--;
+
+          updateTimerDisplay();
+
+          if (totalSeconds <= 0) {
+            clearInterval(timerInterval);
+
+            alert("Time is finished. Your assessment will be submitted.");
+
+            finishAssessment();
+          }
+        }, 1000);
+
+      } else {
+        timer.classList.add("hidden");
+        clearInterval(timerInterval);
+      }
+
+      renderQuestion();
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+
+      timer.textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
+
+      timer.classList.remove("warning", "danger");
+
+      if (totalSeconds <= 60) {
+        timer.classList.add("danger");
+      } else if (totalSeconds <= 180) {
+        timer.classList.add("warning");
+      }
+    }
+
+    function renderQuestion() {
+      const question = currentQuestions[currentQuestionIndex];
+
+      if (!question) {
+        return;
+      }
+
+      const total = currentQuestions.length;
+      const current = currentQuestionIndex + 1;
+
+      questionNumber.textContent = "Question " + current;
+
+      questionProgressText.textContent =
+        "Question " + current + " of " + total;
+
+      const answeredCount = selectedAnswers.filter(
+        (answer) => answer !== null
+      ).length;
+
+      answeredText.textContent =
+        "Answered: " + answeredCount;
+
+      questionProgress.style.width =
+        (current / total * 100) + "%";
+
+      questionText.textContent = question.question;
+
+      answersContainer.innerHTML = "";
+
+      question.options.forEach((option, index) => {
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "answer-option";
+
+        if (selectedAnswers[currentQuestionIndex] === index) {
+          button.classList.add("selected");
+        }
+
+        const letter = document.createElement("span");
+
+        letter.className = "answer-letter";
+        letter.textContent = String.fromCharCode(65 + index);
+
+        const content = document.createElement("span");
+
+        content.className = "answer-content";
+        content.textContent = option;
+
+        button.appendChild(letter);
+        button.appendChild(content);
+
+        button.addEventListener("click", () => {
+          selectAnswer(index);
+        });
+
+        answersContainer.appendChild(button);
+      });
+
+      previousButton.disabled = currentQuestionIndex === 0;
+
+      previousButton.style.opacity =
+        currentQuestionIndex === 0 ? "0.5" : "1";
+
+      nextButton.disabled =
+        currentQuestionIndex === total - 1;
+
+      nextButton.style.opacity =
+        currentQuestionIndex === total - 1 ? "0.5" : "1";
+
+      submitButton.classList.toggle(
+        "hidden",
+        currentQuestionIndex !== total - 1
+      );
+
+      renderQuestionMap();
+    }
+
+    function selectAnswer(answerIndex) {
+      if (!assessmentStarted || assessmentFinished) {
+        return;
+      }
+
+      selectedAnswers[currentQuestionIndex] = answerIndex;
+
+      renderQuestion();
+    }
+
+    function renderQuestionMap() {
+      questionMap.innerHTML = "";
+
+      currentQuestions.forEach((question, index) => {
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "map-button";
+        button.textContent = index + 1;
+
+        if (index === currentQuestionIndex) {
+          button.classList.add("current");
+        }
+
+        if (selectedAnswers[index] !== null) {
+          button.classList.add("answered");
+        }
+
+        button.addEventListener("click", () => {
+          currentQuestionIndex = index;
+          renderQuestion();
+        });
+
+        questionMap.appendChild(button);
+      });
+    }
+
+    function goToPrevious() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion();
+      }
+    }
+
+    function goToNext() {
+      if (currentQuestionIndex < currentQuestions.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion();
+      }
+    }
+
+    function finishAssessment() {
+      if (assessmentFinished) {
+        return;
+      }
+
+      const unanswered = selectedAnswers.filter(
+        (answer) => answer === null
+      ).length;
+
+      if (unanswered > 0) {
+        const proceed = confirm(
+          "You have " +
+          unanswered +
+          " unanswered question(s). Submit anyway?"
+        );
+
+        if (!proceed) {
+          return;
+        }
+      }
+
+      assessmentFinished = true;
+      assessmentStarted = false;
+
+      clearInterval(timerInterval);
+
+      const result = calculateResults();
+
+      saveQuizHistory(result);
+      updateAdaptiveProgress(result);
+      displayResults(result);
+
+      quizSection.classList.add("hidden");
+      resultSection.classList.remove("hidden");
+    }
+
+    function calculateResults() {
+      let correct = 0;
+      let incorrect = 0;
+      let unanswered = 0;
+
+      currentQuestions.forEach((question, index) => {
+        const selected = selectedAnswers[index];
+
+        if (selected === null) {
+          unanswered++;
+        } else if (selected === question.answer) {
+          correct++;
+        } else {
+          incorrect++;
+        }
+      });
+
+      const total = currentQuestions.length;
+
+      const percentage = total > 0
+        ? Math.round((correct / total) * 100)
+        : 0;
+
+      return {
+        concept: currentConcept,
+        mode: assessmentMode,
+        total,
+        correct,
+        incorrect,
+        unanswered,
+        percentage,
+        completedAt: new Date().toISOString()
+      };
+    }
+
+    function saveQuizHistory(result) {
+      let history = [];
+
+      try {
+        history = JSON.parse(
+          localStorage.getItem(QUIZ_HISTORY_KEY) || "[]"
+        );
+
+        if (!Array.isArray(history)) {
+          history = [];
+        }
+      } catch (error) {
+        history = [];
+      }
+
+      history.push(result);
+
+      if (history.length > 50) {
+        history = history.slice(-50);
+      }
+
+      localStorage.setItem(
+        QUIZ_HISTORY_KEY,
+        JSON.stringify(history)
+      );
+    }
+
+    function updateAdaptiveProgress(result) {
+      let adaptiveData = {
+        totalAnswers: 0,
+        correctAnswers: 0,
+        incorrectAnswers: 0,
+        hintsUsed: 0,
+        concepts: {}
+      };
+
+      try {
+        const saved = JSON.parse(
+          localStorage.getItem(ADAPTIVE_KEY) || "null"
+        );
+
+        if (saved && typeof saved === "object") {
+          adaptiveData = {
+            ...adaptiveData,
+            ...saved
+          };
+        }
+      } catch (error) {
+        console.warn("Adaptive data could not be loaded.");
+      }
+
+      if (!adaptiveData.concepts) {
+        adaptiveData.concepts = {};
+      }
+
+      if (!adaptiveData.concepts[currentConcept]) {
+        adaptiveData.concepts[currentConcept] = {
+          attempts: 0,
+          correct: 0,
+          incorrect: 0,
+          hints: 0
+        };
+      }
+
+      const conceptData = adaptiveData.concepts[currentConcept];
+
+      conceptData.attempts += result.total;
+      conceptData.correct += result.correct;
+      conceptData.incorrect += result.incorrect;
+
+      adaptiveData.totalAnswers +=
+        result.correct + result.incorrect;
+
+      adaptiveData.correctAnswers += result.correct;
+
+      adaptiveData.incorrectAnswers += result.incorrect;
+
+      adaptiveData.lastQuiz = {
+        concept: result.concept,
+        percentage: result.percentage,
+        completedAt: result.completedAt
+      };
+
+      localStorage.setItem(
+        ADAPTIVE_KEY,
+        JSON.stringify(adaptiveData)
+      );
+    }
+
+    function displayResults(result) {
+      const passed = result.percentage >= 50;
+
+      resultIcon.textContent = passed ? "✓" : "↻";
+
+      resultTitle.textContent = passed
+        ? "Assessment Complete"
+        : "Keep Practicing";
+
+      resultMessage.textContent = passed
+        ? "Good work. Review your answers and continue improving."
+        : "Use the explanations below to identify areas for practice.";
+
+      resultPercentage.textContent =
+        result.percentage + "%";
+
+      resultMode.textContent =
+        result.concept +
+        " • " +
+        (result.mode === "exam"
+          ? "Examination"
+          : "Practice");
+
+      correctResult.textContent = result.correct;
+      incorrectResult.textContent = result.incorrect;
+      unansweredResult.textContent = result.unanswered;
+
+      reviewContainer.innerHTML = "";
+
+      currentQuestions.forEach((question, index) => {
+        const selected = selectedAnswers[index];
+
+        const isCorrect = selected === question.answer;
+
+        const item = document.createElement("div");
+
+        item.className =
+          "review-item " +
+          (isCorrect ? "correct" : "incorrect");
+
+        const heading = document.createElement("h4");
+
+        heading.textContent =
+          (index + 1) +
+          ". " +
+          question.question;
+
+        const status = document.createElement("p");
+
+        status.className =
+          isCorrect
+            ? "correct-text"
+            : "incorrect-text";
+
+        status.textContent = isCorrect
+          ? "Correct answer"
+          : selected === null
+            ? "Not answered"
+            : "Incorrect answer";
+
+        const selectedText = document.createElement("p");
+
+        selectedText.className = "neutral-text";
+
+        selectedText.textContent =
+          "Your answer: " +
+          (selected === null
+            ? "Not answered"
+            : question.options[selected]);
+
+        const correctText = document.createElement("p");
+
+        correctText.className = "correct-text";
+
+        correctText.textContent =
+          "Correct answer: " +
+          question.options[question.answer];
+
+        const explanation = document.createElement("p");
+
+        explanation.className = "neutral-text";
+
+        explanation.textContent =
+          "Explanation: " +
+          question.explanation;
+
+        item.appendChild(heading);
+        item.appendChild(status);
+        item.appendChild(selectedText);
+        item.appendChild(correctText);
+        item.appendChild(explanation);
+
+        reviewContainer.appendChild(item);
+      });
+    }
+
+    function resetAssessmentState() {
+      clearInterval(timerInterval);
+
+      currentQuestions = [];
+      currentQuestionIndex = 0;
+      selectedAnswers = [];
+      assessmentStarted = false;
+      assessmentFinished = false;
+      totalSeconds = 0;
+    }
+
+    function returnToSetup() {
+      resetAssessmentState();
+
+      resultSection.classList.add("hidden");
+      quizSection.classList.add("hidden");
+      setupSection.classList.remove("hidden");
+    }
+
+    startButton.addEventListener("click", startAssessment);
+
+    previousButton.addEventListener("click", goToPrevious);
+
+    nextButton.addEventListener("click", goToNext);
+
+    submitButton.addEventListener("click", finishAssessment);
+
+    retryButton.addEventListener("click", () => {
+      resetAssessmentState();
+
+      prepareQuestions();
+
+      currentQuestionIndex = 0;
+      assessmentStarted = true;
+      assessmentFinished = false;
+
+      resultSection.classList.add("hidden");
+      quizSection.classList.remove("hidden");
+
+      if (assessmentMode === "exam") {
+        totalSeconds = Number(examMinutes.value) * 60;
+
+        timer.classList.remove("hidden");
+        updateTimerDisplay();
+
+        clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+          totalSeconds--;
+          updateTimerDisplay();
+
+          if (totalSeconds <= 0) {
+            clearInterval(timerInterval);
+            finishAssessment();
+          }
+        }, 1000);
+      } else {
+        timer.classList.add("hidden");
+      }
+
+      renderQuestion();
+    });
+
+    newAssessmentButton.addEventListener(
+      "click",
+      returnToSetup
+    );
+
+    dashboardButton.addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
+
+    window.addEventListener("beforeunload", (event) => {
+      if (assessmentStarted && !assessmentFinished) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    });
+
+  </script>
+
+</body>
+</html>
