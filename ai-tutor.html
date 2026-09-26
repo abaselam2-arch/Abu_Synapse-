@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SYNAPSE AI Tutor</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(0, 180, 255, 0.12), transparent 30%),
+        linear-gradient(135deg, #050b16, #091426 50%, #050914);
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(4, 9, 18, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: #19cfff;
+    }
+
+    .dashboard-button {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #ffffff;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .dashboard-button:hover {
+      background: rgba(25,207,255,0.15);
+    }
+
+    main {
+      width: min(1100px, 94%);
+      margin: 30px auto;
+    }
+
+    .hero {
+      margin-bottom: 25px;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 6vw, 54px);
+      margin-bottom: 10px;
+    }
+
+    .hero h1 span {
+      color: #19cfff;
+    }
+
+    .hero p {
+      color: #aebbd0;
+      line-height: 1.7;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .control {
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 14px;
+      border-radius: 14px;
+    }
+
+    .control label {
+      display: block;
+      color: #91a3bd;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      color: white;
+      background: #0d192b;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    select {
+      padding: 11px;
+    }
+
+    .chat {
+      min-height: 430px;
+      max-height: 560px;
+      overflow-y: auto;
+      padding: 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .message {
+      margin-bottom: 18px;
+      display: flex;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 14px 16px;
+      border-radius: 15px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .assistant .bubble {
+      background: #101f35;
+      border: 1px solid rgba(25,207,255,0.15);
+    }
+
+    .user .bubble {
+      background: #0b617a;
+    }
+
+    .composer {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 65px;
+      padding: 14px;
+      font-size: 15px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #087ea4, #13c4ee);
+      border-radius: 11px;
+      padding: 0 22px;
+      font-weight: 700;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .secondary {
+      padding: 10px 15px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .examples {
+      margin-top: 18px;
+    }
+
+    .examples p {
+      color: #91a3bd;
+      margin-bottom: 9px;
+      font-size: 13px;
+    }
+
+    .example-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .example-buttons button {
+      padding: 9px 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .status {
+      margin-top: 10px;
+      color: #91a3bd;
+      font-size: 13px;
+    }
+
+    @media (max-width: 800px) {
+      .controls {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .composer {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        min-height: 48px;
+      }
+
+      .bubble {
+        max-width: 92%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+
+    <div class="logo">
+      SYNAPSE <span>AI</span>
+    </div>
+
+    <a
+      href="https://abaselam2-arch.github.io/Abu_Synapse-/dashboard.html"
+      class="dashboard-button"
+    >
+      ← Dashboard
+    </a>
+
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+
+    <h1>
+      Learn with <span>SYNAPSE AI</span>
+    </h1>
+
+    <p>
+      An adaptive AI tutor designed to explain concepts,
+      guide your reasoning, and help you learn step by step.
+    </p>
+
+  </section>
+
+  <section class="controls">
+
+    <div class="control">
+      <label>Subject</label>
+
+      <select id="subject">
+        <option>Mathematics</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Biology</option>
+        <option>General</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label>Level</label>
+
+      <select id="level">
+        <option>Beginner</option>
+        <option>Intermediate</option>
+        <option>Advanced</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label>Mode</label>
+
+      <select id="mode">
+        <option>Explain</option>
+        <option>Hint</option>
+        <option>Practice</option>
+        <option>Review</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label>Concept</label>
+
+      <select id="concept">
+        <option>General</option>
+        <option>Linear Equations</option>
+        <option>Arithmetic</option>
+        <option>Fractions</option>
+        <option>Negative Numbers</option>
+        <option>Algebraic Expressions</option>
+      </select>
+    </div>
+
+  </section>
+
+  <section class="chat" id="chat">
+
+    <div class="message assistant">
+      <div class="bubble">
+        Hello! I am your SYNAPSE AI Tutor.
+
+        Ask me a question and I will help you understand it step by step.
+      </div>
+    </div>
+
+  </section>
+
+  <div class="composer">
+
+    <textarea
+      id="message"
+      placeholder="Ask your learning question..."
+    ></textarea>
+
+    <button id="sendButton">
+      Send
+    </button>
+
+  </div>
+
+  <div class="actions">
+
+    <button class="secondary" id="clearButton">
+      Clear Conversation
+    </button>
+
+  </div>
+
+  <div class="examples">
+
+    <p>Try an example:</p>
+
+    <div class="example-buttons">
+
+      <button data-question="Explain linear equations to me.">
+        Linear equations
+      </button>
+
+      <button data-question="Give me a hint for solving 2x + 5 = 15.">
+        Give me a hint
+      </button>
+
+      <button data-question="Teach me fractions using a simple example.">
+        Fractions
+      </button>
+
+      <button data-question="Explain negative numbers with an everyday example.">
+        Negative numbers
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="status" id="status">
+    AI Tutor ready.
+  </div>
+
+</main>
+
+<script>
+  const API_URL = "https://synapse-ai-tutor-2.onrender.com/api/tutor";
+
+  const chat = document.getElementById("chat");
+  const messageInput = document.getElementById("message");
+  const sendButton = document.getElementById("sendButton");
+  const clearButton = document.getElementById("clearButton");
+  const statusText = document.getElementById("status");
+
+  const subject = document.getElementById("subject");
+  const level = document.getElementById("level");
+  const mode = document.getElementById("mode");
+  const concept = document.getElementById("concept");
+
+  let history = [];
+
+  function addMessage(role, content) {
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className = `message ${role}`;
+
+    const bubble = document.createElement("div");
+
+    bubble.className = "bubble";
+
+    bubble.textContent = content;
+
+    wrapper.appendChild(bubble);
+
+    chat.appendChild(wrapper);
+
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function setStatus(text) {
+    statusText.textContent = text;
+  }
+
+  async function sendMessage() {
+
+    const message = messageInput.value.trim();
+
+    if (!message) {
+      return;
+    }
+
+    addMessage("user", message);
+
+    history.push({
+      role: "user",
+      content: message
+    });
+
+    history = history.slice(-8);
+
+    messageInput.value = "";
+
+    sendButton.disabled = true;
+
+    setStatus("SYNAPSE AI is thinking...");
+
+    try {
+
+      const response = await fetch(API_URL, {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          message,
+
+          subject: subject.value,
+
+          level: level.value,
+
+          mode: mode.value,
+
+          concept: concept.value,
+
+          history
+
+        })
+
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+
+        throw new Error(
+          data.error || "AI Tutor request failed."
+        );
+
+      }
+
+      addMessage("assistant", data.answer);
+
+      history.push({
+        role: "assistant",
+        content: data.answer
+      });
+
+      history = history.slice(-8);
+
+      setStatus("AI Tutor ready.");
+
+    } catch (error) {
+
+      addMessage(
+        "assistant",
+        "Sorry, I could not connect to the AI Tutor right now. Please try again."
+      );
+
+      setStatus(error.message);
+
+    } finally {
+
+      sendButton.disabled = false;
+
+      messageInput.focus();
+    }
+  }
+
+  sendButton.addEventListener(
+    "click",
+    sendMessage
+  );
+
+  messageInput.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey
+      ) {
+
+        event.preventDefault();
+
+        sendMessage();
+      }
+
+    }
+  );
+
+  clearButton.addEventListener(
+    "click",
+    () => {
+
+      history = [];
+
+      chat.innerHTML = `
+        <div class="message assistant">
+          <div class="bubble">
+            Conversation cleared.
+
+            What would you like to learn?
+          </div>
+        </div>
+      `;
+
+      setStatus("New conversation started.");
+
+      messageInput.focus();
+    }
+  );
+
+  document
+    .querySelectorAll(".example-buttons button")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          messageInput.value =
+            button.dataset.question;
+
+          messageInput.focus();
+
+        }
+      );
+
+    });
+</script>
+
+</body>
+      </html>
